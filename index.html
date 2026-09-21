@@ -1,22 +1,31 @@
-<script type="text/javascript">
-function everyones_a_syndicate_update() {
-    // Set the style 
-    let style = "\<style\>" + [...document.styleSheets].map((styleSheet) => { try { return [...styleSheet.cssRules].map((rule) => rule.cssText).join(""); } catch (e) {} }).filter(Boolean).join("\n") + "\</style\>";
-    document.getElementById('place-here').setAttribute("srcdoc", style);
-    // Fetch the rendered HTML.
-    return fetch("https://syndicate.fallible.net/?utm_source=chatgpt.com/poll_feeds_rendered", {
-            method: "POST", headers: new Headers({'content-type': 'application/json'}),
-            body: JSON.stringify({feeds: ["http://feeds.arstechnica.com/arstechnica/index/","https://news.ycombinator.com/rss","https://news.google.com/rss/search?q=when:24h allinurl:apnews.com"], 
-            show_mode: 'EqualChronoShuffle'}), 
-        })
-        .then(result => result.text())
-        .then(body => {
-            // pre-append the style to the value of the 
-            document.getElementById('place-here').setAttribute("srcdoc", style + body)
-        });
-}
-document.addEventListener("DOMContentLoaded", function(event){
-    everyones_a_syndicate_update();
-});
-</script>
-<iframe id="place-here" style="height: 20em"></iframe>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Email API Test</title>
+</head>
+<body>
+  <h1>Email API Test</h1>
+  <pre id="output">Loading...</pre>
+
+  <script>
+    const API = "YOUR_APPS_SCRIPT_URL";
+
+    fetch(API)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById("output").textContent =
+          JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.getElementById("output").textContent =
+          "ERROR:\n" + error;
+      });
+  </script>
+</body>
+</html>
