@@ -1291,7 +1291,72 @@
      */
 
     async function handleUnlock() {
+     const passwordInput = document.getElementById("password");
+     const rememberMe = document.getElementById("rememberMe");
+    const unlockButton = document.getElementById("unlockButton");
 
+    const password = passwordInput.value;
+
+     if (!password) {
+      showLoginError("Enter your password.");
+     return;
+     }
+
+  clearLoginError();
+
+  unlockButton.disabled = true;
+  unlockButton.textContent = "Unlocking…";
+
+  try {
+    // First, actually decrypt the data.
+    const keys = await unlockWithPassword(password);
+
+    // Only after successful decryption do we try to remember the device.
+    if (rememberMe.checked) {
+      try {
+        await saveRememberedKeys(
+          keys.aesKey,
+          keys.hmacKey
+        );
+      } catch (rememberError) {
+        console.error(
+          "Remember-device storage failed:",
+          rememberError
+        );
+
+        // The dashboard itself still works.
+        showLoginError(
+          "Dashboard unlocked, but this browser could not remember the device."
+        );
+      }
+    } else {
+      try {
+        await clearRememberedKeys();
+      } catch (clearError) {
+        console.error(
+          "Could not clear remembered keys:",
+          clearError
+        );
+      }
+    }
+
+    passwordInput.value = "";
+
+    showDashboard();
+
+  } catch (error) {
+    console.error("Unlock failed:", error);
+
+    showLoginError(
+      "Unlock failed: " +
+      (error.message || String(error))
+    );
+
+  } finally {
+    unlockButton.disabled = false;
+    unlockButton.textContent = "Unlock";
+  }
+}
       const passwordInput =
         document.getElementById(
           "password"
