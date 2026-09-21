@@ -2,28 +2,713 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Email API Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Dashboard</title>
+
+  <style>
+    :root {
+      color-scheme: light dark;
+
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --text: #202124;
+      --muted: #6b7280;
+      --border: #dadce0;
+      --accent: #1a73e8;
+      --danger: #b3261e;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #202124;
+        --card: #292a2d;
+        --text: #f1f3f4;
+        --muted: #aeb4bb;
+        --border: #3c4043;
+        --accent: #8ab4f8;
+        --danger: #f28b82;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    #lockScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: min(420px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .12);
+    }
+
+    .login-card h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    .login-card p {
+      color: var(--muted);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+    }
+
+    .login-button {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    #loginError {
+      color: var(--danger);
+      min-height: 1.4em;
+      margin-top: 12px;
+    }
+
+    #dashboard {
+      display: none;
+      padding: 24px;
+      max-width: 1600px;
+      margin: auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .updated {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .card-body {
+      padding: 0;
+    }
+
+    .email {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .email:last-child {
+      border-bottom: 0;
+    }
+
+    .email-subject {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .email-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .email-snippet {
+      color: var(--text);
+      opacity: .9;
+      line-height: 1.4;
+    }
+
+    .empty {
+      padding: 25px 20px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 800px) {
+      #dashboard {
+        padding: 12px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Email API Test</h1>
-  <pre id="output">Loading...</pre>
 
-  <script>
-const API = "https://script.google.com/a/macros/jrischools.org/s/AKfycbziYegSQdvp2G0pTUUehgn8J5RJbZFrQ3cquOPVCYEFm7uDd6eYOGM9E4ry5wcIxz5nxA/exec";
+  <section id="lockScreen">
+    <div class="login-card">
+      <h1>Dashboard</h1>
+      <p>Enter your dashboard password to continue.</p>
 
-fetch(API)
-  .then(async response => {
-    const text = await response.text();
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Password"
+      >
 
-    document.getElementById("output").textContent =
-      "STATUS: " + response.status + "\n\n" +
-      "URL: " + response.url + "\n\n" +
-      "RESPONSE:\n" + text;
-  })
-  .catch(error => {
-    document.getElementById("output").textContent =
-      "FETCH ERROR:\n" + error;
-  });
+      <button
+        class="login-button"
+        id="loginButton"
+      >
+        Unlock
+      </button>
+
+      <div id="loginError"></div>
+    </div>
+  </section>
+
+
+  <main id="dashboard">
+
+    <header>
+      <div>
+        <h1>Dashboard</h1>
+      </div>
+
+      <div class="header-right">
+        <span class="updated" id="updated"></span>
+        <button id="lockButton">Lock</button>
+      </div>
+    </header>
+
+
+    <div class="grid">
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Email</h2>
+        </div>
+
+        <div class="card-body" id="emails">
+          <div class="empty">
+            Loading email...
+          </div>
+        </div>
+      </section>
+
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Calendar</h2>
+        </div>
+
+        <div class="card-body" id="calendar">
+          <div class="empty">
+            Calendar coming next.
+          </div>
+        </div>
+      </section>
+
+
+      <section class="card" style="grid-column: 1 / -1;">
+        <div class="card-header">
+          <h2>RSS</h2>
+        </div>
+
+        <div class="card-body" id="rss">
+          <div class="empty">
+            RSS coming next.
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+
+<script>
+/*
+ * GitHub Pages configuration.
+ *
+ * Change this to the RAW GitHub URL for your encrypted file.
+ */
+const EMAIL_DATA_URL =
+  "email-data.json";
+
+
+/*
+ * Convert a Base64 string into a Uint8Array.
+ */
+function base64ToBytes(base64) {
+  const binary = atob(base64);
+
+  const bytes = new Uint8Array(binary.length);
+
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return bytes;
+}
+
+
+/*
+ * Derive the AES/HMAC keys from the dashboard password.
+ *
+ * This matches the Apps Script:
+ *
+ * PBKDF2-SHA256
+ * 100000 iterations
+ * 512-bit output
+ *
+ * The first 256 bits are the AES key.
+ * The second 256 bits are the HMAC key.
+ */
+async function deriveKeys(password, salt, iterations) {
+  const encoder = new TextEncoder();
+
+  const passwordKey =
+    await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(password),
+      "PBKDF2",
+      false,
+      ["deriveBits"]
+    );
+
+  const bits =
+    await crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        salt: salt,
+        iterations: iterations,
+        hash: "SHA-256"
+      },
+      passwordKey,
+      512
+    );
+
+  const bytes = new Uint8Array(bits);
+
+  return {
+    aes: bytes.slice(0, 32),
+    hmac: bytes.slice(32, 64)
+  };
+}
+
+
+/*
+ * Verify the HMAC before attempting decryption.
+ */
+async function verifyHmac(
+  hmacKeyBytes,
+  authenticatedData,
+  expectedMac
+) {
+  const key =
+    await crypto.subtle.importKey(
+      "raw",
+      hmacKeyBytes,
+      {
+        name: "HMAC",
+        hash: "SHA-256"
+      },
+      false,
+      ["verify"]
+    );
+
+  return crypto.subtle.verify(
+    "HMAC",
+    key,
+    expectedMac,
+    new TextEncoder().encode(authenticatedData)
+  );
+}
+
+
+/*
+ * Decrypt the email file.
+ */
+async function decryptEmailData(password, encrypted) {
+
+  const salt =
+    base64ToBytes(encrypted.salt);
+
+  const iv =
+    base64ToBytes(encrypted.iv);
+
+  const ciphertext =
+    base64ToBytes(encrypted.ciphertext);
+
+  const expectedMac =
+    base64ToBytes(encrypted.mac);
+
+  const keys =
+    await deriveKeys(
+      password,
+      salt,
+      encrypted.iterations
+    );
+
+
+  const authenticatedData =
+    "1|" +
+    encrypted.salt +
+    "|" +
+    encrypted.iv +
+    "|" +
+    encrypted.ciphertext;
+
+
+  const valid =
+    await verifyHmac(
+      keys.hmac,
+      authenticatedData,
+      expectedMac
+    );
+
+  if (!valid) {
+    throw new Error(
+      "Incorrect password or corrupted data."
+    );
+  }
+
+
+  const aesKey =
+    await crypto.subtle.importKey(
+      "raw",
+      keys.aes,
+      {
+        name: "AES-CBC"
+      },
+      false,
+      ["decrypt"]
+    );
+
+
+  const plaintext =
+    await crypto.subtle.decrypt(
+      {
+        name: "AES-CBC",
+        iv: iv
+      },
+      aesKey,
+      ciphertext
+    );
+
+
+  return JSON.parse(
+    new TextDecoder().decode(plaintext)
+  );
+}
+
+
+/*
+ * Load encrypted email data from GitHub Pages.
+ */
+async function loadEmails(password) {
+
+  const response =
+    await fetch(
+      EMAIL_DATA_URL +
+      "?t=" +
+      Date.now()
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      "Could not load email data."
+    );
+  }
+
+  const encrypted =
+    await response.json();
+
+  return decryptEmailData(
+    password,
+    encrypted
+  );
+}
+
+
+/*
+ * Display emails.
+ */
+function displayEmails(data) {
+
+  const container =
+    document.getElementById("emails");
+
+  container.innerHTML = "";
+
+  if (!data.emails || data.emails.length === 0) {
+    container.innerHTML =
+      '<div class="empty">No email.</div>';
+
+    return;
+  }
+
+
+  for (const email of data.emails) {
+
+    const item =
+      document.createElement("article");
+
+    item.className = "email";
+
+
+    const subject =
+      document.createElement("div");
+
+    subject.className =
+      "email-subject";
+
+    subject.textContent =
+      email.subject || "(No subject)";
+
+
+    const meta =
+      document.createElement("div");
+
+    meta.className =
+      "email-meta";
+
+    meta.textContent =
+      formatEmailMeta(email);
+
+
+    const snippet =
+      document.createElement("div");
+
+    snippet.className =
+      "email-snippet";
+
+    snippet.textContent =
+      email.snippet || "";
+
+
+    item.appendChild(subject);
+    item.appendChild(meta);
+    item.appendChild(snippet);
+
+    container.appendChild(item);
+  }
+
+
+  document.getElementById("updated").textContent =
+    "Updated " +
+    new Date(data.updated).toLocaleString();
+}
+
+
+/*
+ * Format sender/date.
+ */
+function formatEmailMeta(email) {
+
+  let date = "";
+
+  if (email.date) {
+    date =
+      new Date(email.date)
+        .toLocaleString();
+  }
+
+  return (
+    (email.sender || "") +
+    (date ? " · " + date : "")
+  );
+}
+
+
+/*
+ * Unlock dashboard.
+ */
+async function unlock() {
+
+  const password =
+    document.getElementById("password").value;
+
+  const error =
+    document.getElementById("loginError");
+
+  error.textContent = "";
+
+  if (!password) {
+    error.textContent =
+      "Enter your password.";
+
+    return;
+  }
+
+
+  try {
+
+    const data =
+      await loadEmails(password);
+
+
+    /*
+     * Keep the password only in memory.
+     *
+     * It is NOT stored in localStorage.
+     */
+    window.dashboardPassword =
+      password;
+
+
+    displayEmails(data);
+
+
+    document.getElementById(
+      "lockScreen"
+    ).style.display = "none";
+
+
+    document.getElementById(
+      "dashboard"
+    ).style.display = "block";
+
+
+  } catch (err) {
+
+    console.error(err);
+
+    error.textContent =
+      "Incorrect password or email data unavailable.";
+  }
+}
+
+
+/*
+ * Lock dashboard.
+ */
+function lockDashboard() {
+
+  window.dashboardPassword =
+    null;
+
+  document.getElementById(
+    "password"
+  ).value = "";
+
+  document.getElementById(
+    "dashboard"
+  ).style.display = "none";
+
+  document.getElementById(
+    "lockScreen"
+  ).style.display = "flex";
+}
+
+
+document.getElementById(
+  "loginButton"
+).addEventListener(
+  "click",
+  unlock
+);
+
+
+document.getElementById(
+  "lockButton"
+).addEventListener(
+  "click",
+  lockDashboard
+);
+
+
+document.getElementById(
+  "password"
+).addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key === "Enter") {
+      unlock();
+    }
+
+  }
+);
 </script>
+
 </body>
 </html>
