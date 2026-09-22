@@ -1,1788 +1,2178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Dashboard</title>
+<meta charset="UTF-8">
 
-  <style>
-    :root {
-      color-scheme: light dark;
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-      --bg: #f4f6f8;
-      --card: #ffffff;
-      --text: #17202a;
-      --muted: #68737d;
-      --border: #dfe4e8;
-      --accent: #3578e5;
-      --accent-hover: #2865c7;
-      --danger: #c0392b;
-      --input-bg: #ffffff;
-      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    }
+<title>Dashboard</title>
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #111418;
-        --card: #1b2026;
-        --text: #edf1f5;
-        --muted: #9ba6b2;
-        --border: #303740;
-        --accent: #5b91ee;
-        --accent-hover: #79a6f3;
-        --danger: #ef6b5b;
-        --input-bg: #15191e;
-        --shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      }
-    }
 
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      font-family:
+:root {
+
+    color-scheme: light dark;
+
+    --bg: Canvas;
+
+    --surface:
+        color-mix(
+            in srgb,
+            Canvas 94%,
+            CanvasText 6%
+        );
+
+    --surface-2:
+        color-mix(
+            in srgb,
+            Canvas 88%,
+            CanvasText 12%
+        );
+
+    --text:
+        CanvasText;
+
+    --muted:
+        color-mix(
+            in srgb,
+            CanvasText 60%,
+            Canvas 40%
+        );
+
+    --border:
+        color-mix(
+            in srgb,
+            CanvasText 18%,
+            Canvas 82%
+        );
+
+    --accent:
+        #4f7cff;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+
+    margin: 0;
+
+    min-height: 100%;
+}
+
+
+body {
+
+    font-family:
         system-ui,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
 
-    button,
-    input {
-      font: inherit;
-    }
+    background:
+        var(--bg);
 
-    button {
-      border: 0;
-      border-radius: 9px;
-      padding: 9px 15px;
-      cursor: pointer;
-      background: var(--accent);
-      color: white;
-      transition:
-        background 0.15s,
-        opacity 0.15s;
-    }
+    color:
+        var(--text);
+}
 
-    button:hover {
-      background: var(--accent-hover);
-    }
 
-    button:disabled {
-      opacity: 0.55;
-      cursor: default;
-    }
+button,
+input {
 
-    .secondary-button {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
+    font: inherit;
+}
 
-    .secondary-button:hover {
-      background: var(--border);
-    }
 
-    .hidden {
-      display: none !important;
-    }
+button {
 
-    /* =========================================================
-       Login
-       ========================================================= */
+    cursor: pointer;
+}
 
-    #loginScreen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
 
-    .login-card {
-      width: min(420px, 100%);
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 30px;
-      box-shadow: var(--shadow);
-    }
+.hidden {
 
-    .login-card h1 {
-      margin: 0 0 8px;
-      font-size: 1.7rem;
-    }
+    display: none !important;
+}
 
-    .login-card p {
-      margin: 0 0 22px;
-      color: var(--muted);
-    }
 
-    .password-row {
-      display: flex;
-      gap: 8px;
-    }
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
-    .password-row input {
-      flex: 1;
-    }
+#loginScreen {
 
-    input[type="password"] {
-      width: 100%;
-      padding: 11px 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--input-bg);
-      color: var(--text);
-      outline: none;
-    }
+    min-height: 100vh;
 
-    input:focus {
-      border-color: var(--accent);
-    }
+    display: flex;
 
-    .remember-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 13px 0 18px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      cursor: pointer;
-    }
+    align-items: center;
 
-    .remember-row input {
-      width: auto;
-      margin: 0;
-    }
+    justify-content: center;
 
-    #loginError {
-      margin-top: 14px;
-      color: var(--danger);
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
+    padding: 24px;
+}
 
-    /* =========================================================
-       Dashboard
-       ========================================================= */
 
-    #dashboard {
-      min-height: 100vh;
-    }
+.login-card {
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: color-mix(
-        in srgb,
-        var(--bg) 92%,
-        transparent
-      );
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
+    width: 100%;
 
-    .topbar-inner {
-      max-width: 1400px;
-      margin: auto;
-      padding: 15px 20px;
+    max-width: 420px;
 
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
+    background:
+        var(--surface);
 
-    .topbar h1 {
-      margin: 0;
-      font-size: 1.3rem;
-    }
+    border:
+        1px solid var(--border);
 
-    .topbar-actions {
-      display: flex;
-      gap: 8px;
-    }
+    border-radius:
+        18px;
 
-    .content {
-      max-width: 1400px;
-      margin: auto;
-      padding: 22px 20px 40px;
-    }
+    padding:
+        32px;
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns:
+    box-shadow:
+        0 18px 50px
+        rgba(0, 0, 0, 0.12);
+}
+
+
+.login-card h1 {
+
+    margin:
+        0 0 8px;
+
+    font-size:
+        1.8rem;
+}
+
+
+.login-card p {
+
+    color:
+        var(--muted);
+
+    line-height:
+        1.5;
+}
+
+
+#password {
+
+    width:
+        100%;
+
+    padding:
+        12px 14px;
+
+    border-radius:
+        10px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        var(--bg);
+
+    color:
+        var(--text);
+
+    outline:
+        none;
+}
+
+
+#password:focus {
+
+    border-color:
+        var(--accent);
+}
+
+
+.login-actions {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin-top:
+        16px;
+}
+
+
+.primary-button {
+
+    border:
+        0;
+
+    background:
+        var(--accent);
+
+    color:
+        white;
+
+    padding:
+        11px 18px;
+
+    border-radius:
+        10px;
+
+    font-weight:
+        600;
+}
+
+
+.primary-button:disabled {
+
+    opacity:
+        0.6;
+
+    cursor:
+        wait;
+}
+
+
+.error {
+
+    color:
+        #d33;
+
+    margin-top:
+        14px;
+
+    font-size:
+        0.9rem;
+}
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+#dashboard {
+
+    min-height:
+        100vh;
+
+    padding:
+        24px;
+}
+
+
+.dashboard-inner {
+
+    width:
+        100%;
+
+    max-width:
+        1500px;
+
+    margin:
+        0 auto;
+}
+
+
+header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    margin-bottom:
+        24px;
+}
+
+
+header h1 {
+
+    margin:
+        0;
+
+    font-size:
+        1.8rem;
+}
+
+
+.header-actions {
+
+    display:
+        flex;
+
+    gap:
+        8px;
+}
+
+
+.secondary-button {
+
+    border:
+        1px solid var(--border);
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    padding:
+        9px 14px;
+
+    border-radius:
+        9px;
+}
+
+
+.secondary-button:hover {
+
+    background:
+        var(--surface-2);
+}
+
+
+.secondary-button:disabled {
+
+    opacity:
+        0.6;
+
+    cursor:
+        wait;
+}
+
+
+.grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
         minmax(0, 1fr)
         minmax(0, 1fr);
 
-      gap: 20px;
+    gap:
+        20px;
+}
+
+
+.panel {
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        16px;
+
+    overflow:
+        hidden;
+}
+
+
+.panel-header {
+
+    padding:
+        16px 18px;
+
+    border-bottom:
+        1px solid var(--border);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+}
+
+
+.panel-header h2 {
+
+    margin:
+        0;
+
+    font-size:
+        1.15rem;
+}
+
+
+.panel-body {
+
+    padding:
+        16px;
+}
+
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+
+.calendar-event {
+
+    padding:
+        14px 0;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.calendar-event:first-child {
+
+    padding-top:
+        0;
+}
+
+
+.calendar-event:last-child {
+
+    border-bottom:
+        0;
+
+    padding-bottom:
+        0;
+}
+
+
+.event-title {
+
+    font-weight:
+        650;
+
+    margin-bottom:
+        5px;
+}
+
+
+.event-time {
+
+    color:
+        var(--muted);
+
+    font-size:
+        0.9rem;
+
+    margin-bottom:
+        4px;
+}
+
+
+.event-location {
+
+    color:
+        var(--muted);
+
+    font-size:
+        0.88rem;
+
+    margin-bottom:
+        4px;
+}
+
+
+.event-calendar {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        0.82rem;
+}
+
+
+.calendar-dot {
+
+    width:
+        8px;
+
+    height:
+        8px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--accent);
+
+    flex:
+        0 0 auto;
+}
+
+
+/* =========================================================
+   RSS
+   ========================================================= */
+
+.feed {
+
+    margin-bottom:
+        22px;
+}
+
+
+.feed:last-child {
+
+    margin-bottom:
+        0;
+}
+
+
+.feed-title {
+
+    font-size:
+        1rem;
+
+    margin-bottom:
+        8px;
+}
+
+
+.rss-item {
+
+    display:
+        block;
+
+    padding:
+        10px 0;
+
+    border-bottom:
+        1px solid var(--border);
+
+    text-decoration:
+        none;
+
+    color:
+        var(--text);
+}
+
+
+.rss-item:last-child {
+
+    border-bottom:
+        0;
+}
+
+
+.rss-item:hover
+.rss-item-title {
+
+    text-decoration:
+        underline;
+}
+
+
+.rss-item-title {
+
+    font-weight:
+        600;
+
+    line-height:
+        1.35;
+}
+
+
+.rss-item-meta {
+
+    color:
+        var(--muted);
+
+    font-size:
+        0.82rem;
+
+    margin-top:
+        4px;
+}
+
+
+.empty {
+
+    color:
+        var(--muted);
+
+    padding:
+        12px 0;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+#status {
+
+    color:
+        var(--muted);
+
+    font-size:
+        0.85rem;
+
+    margin-top:
+        4px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 800px
+) {
+
+    #dashboard {
+
+        padding:
+            14px;
     }
 
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+
+    header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
     }
 
-    .card-header {
-      padding: 17px 18px;
 
-      border-bottom: 1px solid var(--border);
+    .grid {
 
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+        grid-template-columns:
+            1fr;
     }
+}
 
-    .card-header h2 {
-      margin: 0;
-      font-size: 1.05rem;
-    }
+</style>
 
-    .card-body {
-      padding: 18px;
-    }
-
-    /* =========================================================
-       Email
-       ========================================================= */
-
-    .email-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
-
-    .email {
-      padding: 15px 18px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .email:last-child {
-      border-bottom: 0;
-    }
-
-    .email-subject {
-      font-weight: 600;
-      margin-bottom: 5px;
-      overflow-wrap: anywhere;
-    }
-
-    .email-meta {
-      color: var(--muted);
-      font-size: 0.82rem;
-      margin-bottom: 7px;
-      overflow-wrap: anywhere;
-    }
-
-    .email-snippet {
-      color: var(--text);
-      opacity: 0.88;
-      font-size: 0.9rem;
-      line-height: 1.45;
-      overflow-wrap: anywhere;
-    }
-
-    .status {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .placeholder {
-      color: var(--muted);
-      min-height: 120px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      text-align: center;
-    }
-
-    @media (max-width: 800px) {
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar-inner {
-        align-items: flex-start;
-      }
-    }
-
-    @media (max-width: 500px) {
-      .topbar-inner {
-        flex-direction: column;
-      }
-
-      .topbar-actions {
-        width: 100%;
-      }
-
-      .topbar-actions button {
-        flex: 1;
-      }
-
-      .password-row {
-        flex-direction: column;
-      }
-    }
-  </style>
 </head>
+
 
 <body>
 
-  <!-- =========================================================
-       Login screen
-       ========================================================= -->
 
-  <section id="loginScreen">
+<!-- =======================================================
+     LOGIN
+     ======================================================= -->
+
+<section id="loginScreen">
 
     <div class="login-card">
 
-      <h1>Dashboard</h1>
-
-      <p>
-        Enter your dashboard password to unlock your data.
-      </p>
-
-      <div class="password-row">
-
-        <input
-          id="password"
-          type="password"
-          placeholder="Password"
-          autocomplete="current-password"
-        >
-
-        <button
-          id="unlockButton"
-          type="button"
-        >
-          Unlock
-        </button>
-
-      </div>
-
-      <label class="remember-row">
-
-        <input
-          type="checkbox"
-          id="rememberMe"
-        >
-
-        Remember this device
-
-      </label>
-
-      <div
-        id="loginError"
-        class="hidden"
-      ></div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================================================
-       Dashboard
-       ========================================================= -->
-
-  <section
-    id="dashboard"
-    class="hidden"
-  >
-
-    <header class="topbar">
-
-      <div class="topbar-inner">
-
         <h1>Dashboard</h1>
 
-        <div class="topbar-actions">
+        <p>
+            Enter your dashboard password to unlock
+            your private calendar and RSS data.
+        </p>
 
-          <button
-            id="refreshButton"
-            type="button"
-            class="secondary-button"
-          >
-            Refresh
-          </button>
 
-          <button
-            id="lockButton"
-            type="button"
-            class="secondary-button"
-          >
-            Lock
-          </button>
+        <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+        >
+
+
+        <div class="login-actions">
+
+            <button
+                id="unlockButton"
+                class="primary-button"
+            >
+                Unlock
+            </button>
 
         </div>
 
-      </div>
 
-    </header>
+        <div
+            id="loginError"
+            class="error hidden"
+        ></div>
+
+    </div>
+
+</section>
 
 
-    <main class="content">
+<!-- =======================================================
+     DASHBOARD
+     ======================================================= -->
 
-      <div class="dashboard-grid">
+<section
+    id="dashboard"
+    class="hidden"
+>
 
-        <!-- ===================================================
-             Email
-             =================================================== -->
+    <div class="dashboard-inner">
 
-        <section class="card">
 
-          <div class="card-header">
+        <header>
 
-            <h2>Email</h2>
+            <div>
 
-            <span
-              id="emailStatus"
-              class="status"
-            ></span>
+                <h1>
+                    Dashboard
+                </h1>
 
-          </div>
+                <div id="status">
+                    Loading…
+                </div>
 
-          <div
-            id="emailList"
-            class="email-list"
-          >
-
-            <div class="placeholder">
-              Loading email…
             </div>
 
-          </div>
 
-        </section>
+            <div class="header-actions">
+
+                <button
+                    id="refreshButton"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
 
 
-        <!-- ===================================================
-             Calendar
-             =================================================== -->
+                <button
+                    id="lockButton"
+                    class="secondary-button"
+                >
+                    Lock
+                </button>
 
-        <section class="card">
-
-          <div class="card-header">
-
-            <h2>Calendar</h2>
-
-          </div>
-
-          <div class="card-body">
-
-            <div class="placeholder">
-              Calendar will go here.
             </div>
 
-          </div>
-
-        </section>
+        </header>
 
 
-        <!-- ===================================================
-             RSS
-             =================================================== -->
-
-        <section class="card">
-
-          <div class="card-header">
-
-            <h2>RSS</h2>
-
-          </div>
-
-          <div class="card-body">
-
-            <div class="placeholder">
-              RSS feeds will go here.
-            </div>
-
-          </div>
-
-        </section>
-
-      </div>
-
-    </main>
-
-  </section>
+        <main class="grid">
 
 
-  <script>
+            <!-- =================================================
+                 CALENDAR
+                 ================================================= -->
 
-    /*
-     * ============================================================
-     * Configuration
-     * ============================================================
-     */
+            <section class="panel">
 
-    const EMAIL_DATA_URL = "email-data.json";
+                <div class="panel-header">
 
-    /*
-     * Must match Apps Script.
-     */
+                    <h2>
+                        Calendar
+                    </h2>
 
-    const PBKDF2_BITS = 512;
-    const PBKDF2_ITERATIONS = 100000;
+                </div>
 
 
-    /*
-     * ============================================================
-     * Runtime state
-     * ============================================================
-     */
+                <div
+                    id="calendar"
+                    class="panel-body"
+                ></div>
 
-    let currentAESKey = null;
-    let currentHMACKey = null;
-
-    /*
-     * The password exists here only while the current page
-     * is unlocked.
-     */
-
-    let currentPassword = null;
+            </section>
 
 
-    /*
-     * ============================================================
-     * Remembered-device storage
-     *
-     * IMPORTANT:
-     *
-     * The actual password is never stored in localStorage.
-     *
-     * Instead, when "Remember this device" is enabled, we store
-     * an encrypted copy of the derived keys.
-     *
-     * The encryption key for that local copy is itself derived
-     * from a randomly generated browser token.
-     *
-     * This means localStorage does NOT contain your dashboard
-     * password.
-     * ============================================================
-     */
+            <!-- =================================================
+                 RSS
+                 ================================================= -->
 
-    const REMEMBERED_STORAGE_KEY =
-      "dashboardRememberedSession";
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        RSS
+                    </h2>
+
+                </div>
 
 
-    /*
-     * ============================================================
-     * Base64 helpers
-     * ============================================================
-     */
+                <div
+                    id="rss"
+                    class="panel-body"
+                ></div>
 
-    function base64ToBytes(base64) {
+            </section>
 
-      const binary =
+        </main>
+
+    </div>
+
+</section>
+
+
+<script>
+
+
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
+
+const DATA_URL =
+    "dashboard-data.json";
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let currentAESKey =
+    null;
+
+let currentHMACKey =
+    null;
+
+
+/* =========================================================
+   BASE64
+   ========================================================= */
+
+function base64ToBytes(
+    base64
+) {
+
+    const binary =
         atob(base64);
 
-      const bytes =
+
+    const bytes =
         new Uint8Array(
-          binary.length
+            binary.length
         );
 
-      for (
+
+    for (
         let i = 0;
         i < binary.length;
         i++
-      ) {
+    ) {
+
         bytes[i] =
-          binary.charCodeAt(i);
-      }
-
-      return bytes;
+            binary.charCodeAt(i);
     }
 
 
-    function bytesToBase64(bytes) {
-
-      let binary = "";
-
-      const chunkSize = 0x8000;
-
-      for (
-        let i = 0;
-        i < bytes.length;
-        i += chunkSize
-      ) {
-
-        binary += String.fromCharCode(
-          ...bytes.subarray(
-            i,
-            Math.min(
-              i + chunkSize,
-              bytes.length
-            )
-          )
-        );
-      }
-
-      return btoa(binary);
-    }
+    return bytes;
+}
 
 
-    /*
-     * ============================================================
-     * Constant-time comparison
-     * ============================================================
-     */
+/* =========================================================
+   CONSTANT-TIME COMPARISON
+   ========================================================= */
 
-    function constantTimeEqual(a, b) {
+function constantTimeEqual(
+    a,
+    b
+) {
 
-      if (a.length !== b.length) {
+    if (
+        a.length !==
+        b.length
+    ) {
+
         return false;
-      }
+    }
 
-      let result = 0;
 
-      for (
+    let result = 0;
+
+
+    for (
         let i = 0;
         i < a.length;
         i++
-      ) {
+    ) {
+
         result |=
-          a[i] ^ b[i];
-      }
-
-      return result === 0;
+            a[i] ^ b[i];
     }
 
 
-    /*
-     * ============================================================
-     * PBKDF2
-     * ============================================================
-     */
-
-    async function deriveKeys(
-      password,
-      salt,
-      iterations
-    ) {
-
-      const passwordKey =
-        await crypto.subtle.importKey(
-          "raw",
-          new TextEncoder().encode(
-            password
-          ),
-          {
-            name: "PBKDF2"
-          },
-          false,
-          [
-            "deriveBits"
-          ]
-        );
-
-
-      const derivedBits =
-        await crypto.subtle.deriveBits(
-          {
-            name: "PBKDF2",
-            salt: salt,
-            iterations: iterations,
-            hash: "SHA-256"
-          },
-          passwordKey,
-          PBKDF2_BITS
-        );
-
-
-      const derived =
-        new Uint8Array(
-          derivedBits
-        );
-
-
-      /*
-       * First 256 bits:
-       * AES key
-       *
-       * Last 256 bits:
-       * HMAC key
-       */
-
-      const aesBytes =
-        derived.slice(
-          0,
-          32
-        );
-
-
-      const hmacBytes =
-        derived.slice(
-          32,
-          64
-        );
-
-
-      const aesKey =
-        await crypto.subtle.importKey(
-          "raw",
-          aesBytes,
-          {
-            name: "AES-CBC"
-          },
-          false,
-          [
-            "decrypt"
-          ]
-        );
-
-
-      const hmacKey =
-        await crypto.subtle.importKey(
-          "raw",
-          hmacBytes,
-          {
-            name: "HMAC",
-            hash: "SHA-256"
-          },
-          false,
-          [
-            "sign",
-            "verify"
-          ]
-        );
-
-
-      return {
-        aesKey,
-        hmacKey
-      };
-    }
-
-
-    /*
-     * ============================================================
-     * Verify HMAC
-     * ============================================================
-     */
-
-    async function verifyHMAC(
-      hmacKey,
-      saltBase64,
-      ivBase64,
-      ciphertextBase64,
-      expectedMacBase64
-    ) {
-
-      const authenticatedData =
-        "1|" +
-        saltBase64 +
-        "|" +
-        ivBase64 +
-        "|" +
-        ciphertextBase64;
-
-
-      const expectedMac =
-        base64ToBytes(
-          expectedMacBase64
-        );
-
-
-      const actualMac =
-        new Uint8Array(
-          await crypto.subtle.sign(
-            "HMAC",
-            hmacKey,
-            new TextEncoder().encode(
-              authenticatedData
-            )
-          )
-        );
-
-
-      return constantTimeEqual(
-        actualMac,
-        expectedMac
-      );
-    }
-
-
-    /*
-     * ============================================================
-     * Decrypt email-data.json
-     * ============================================================
-     */
-
-    async function decryptEmailData(
-      encryptedData,
-      aesKey,
-      hmacKey
-    ) {
-
-      if (
-        encryptedData.version !== 1
-      ) {
-        throw new Error(
-          "Unsupported encryption version."
-        );
-      }
-
-
-      if (
-        encryptedData.algorithm !==
-        "AES-256-CBC"
-      ) {
-        throw new Error(
-          "Unsupported encryption algorithm."
-        );
-      }
-
-
-      if (
-        encryptedData.kdf !==
-        "PBKDF2-SHA256"
-      ) {
-        throw new Error(
-          "Unsupported key derivation method."
-        );
-      }
-
-
-      if (
-        encryptedData.iterations !==
-        PBKDF2_ITERATIONS
-      ) {
-        throw new Error(
-          "Unexpected PBKDF2 iteration count."
-        );
-      }
-
-
-      /*
-       * Authenticate before decrypting.
-       */
-
-      const valid =
-        await verifyHMAC(
-          hmacKey,
-          encryptedData.salt,
-          encryptedData.iv,
-          encryptedData.ciphertext,
-          encryptedData.mac
-        );
-
-
-      if (!valid) {
-        throw new Error(
-          "Authentication failed. Incorrect password or modified data."
-        );
-      }
-
-
-      const plaintext =
-        await crypto.subtle.decrypt(
-          {
-            name: "AES-CBC",
-            iv: base64ToBytes(
-              encryptedData.iv
-            )
-          },
-          aesKey,
-          base64ToBytes(
-            encryptedData.ciphertext
-          )
-        );
-
-
-      const text =
-        new TextDecoder().decode(
-          plaintext
-        );
-
-
-      return JSON.parse(text);
-    }
-
-
-    /*
-     * ============================================================
-     * Download current encrypted data
-     * ============================================================
-     */
-
-    async function fetchEncryptedEmailData() {
-
-      /*
-       * Both cache: no-store and the timestamp are intentional.
-       */
-
-      const url =
-        EMAIL_DATA_URL +
-        "?t=" +
-        Date.now();
-
-
-      const response =
-        await fetch(
-          url,
-          {
-            cache: "no-store"
-          }
-        );
-
-
-      if (!response.ok) {
-        throw new Error(
-          "Could not download email-data.json (" +
-          response.status +
-          ")."
-        );
-      }
-
-
-      return await response.json();
-    }
-
-
-    /*
-     * ============================================================
-     * Password login
-     * ============================================================
-     */
-
-    async function unlockWithPassword(password) {
-  const encryptedData =
-    await fetchEncryptedEmailData();
-
-  const salt =
-    base64ToBytes(encryptedData.salt);
-
-  const keys =
-    await deriveKeys(
-      password,
-      salt,
-      encryptedData.iterations
-    );
-
-  const decryptedData =
-    await decryptEmailData(
-      encryptedData,
-      keys.aesKey,
-      keys.hmacKey
-    );
-
-  if (
-    !decryptedData ||
-    !Array.isArray(decryptedData.emails)
-  ) {
-    throw new Error(
-      "Decrypted email data does not contain an emails array."
-    );
-  }
-
-  currentAESKey = keys.aesKey;
-  currentHMACKey = keys.hmacKey;
-  currentPassword = password;
-
-  displayEmails(
-    decryptedData.emails
-  );
-
-  return keys;
+    return result === 0;
 }
 
-    /*
-     * ============================================================
-     * Remembered-session encryption
-     *
-     * This is only for convenience on this browser.
-     * ============================================================
-     */
 
-    async function createRememberedSession(
-      aesKey,
-      hmacKey
-    ) {
+/* =========================================================
+   KEY DERIVATION
+   ========================================================= */
 
-      /*
-       * Generate a random 256-bit local token.
-       */
+async function deriveKeys(
+    password,
+    salt,
+    iterations
+) {
 
-      const token =
-        crypto.getRandomValues(
-          new Uint8Array(32)
+    const encoder =
+        new TextEncoder();
+
+
+    const passwordBytes =
+        encoder.encode(
+            password
         );
 
 
-      /*
-       * Store the token only in the encrypted local session.
-       *
-       * The token itself is not the dashboard password.
-       */
-
-      const localKey =
+    const passwordKey =
         await crypto.subtle.importKey(
-          "raw",
-          token,
-          {
-            name: "AES-GCM"
-          },
-          false,
-          [
-            "encrypt",
-            "decrypt"
-          ]
+            "raw",
+
+            passwordBytes,
+
+            "PBKDF2",
+
+            false,
+
+            [
+                "deriveBits"
+            ]
         );
 
 
-      /*
-       * CryptoKey objects cannot be serialized directly.
-       *
-       * Instead, derive a wrapping key from the token and use
-       * it to encrypt the raw derived key material.
-       *
-       * Because the dashboard keys were imported as non-exportable,
-       * we don't export them here. Instead we create a local
-       * encrypted credential by deriving the same keys from the
-       * password in a separate browser-local wrapping operation.
-       *
-       * The password therefore cannot be reconstructed from the
-       * stored data.
-       */
+    const derivedBits =
+        await crypto.subtle.deriveBits(
 
-      const sessionId =
-        bytesToBase64(
-          crypto.getRandomValues(
-            new Uint8Array(16)
-          )
+            {
+                name:
+                    "PBKDF2",
+
+                salt:
+                    salt,
+
+                iterations:
+                    iterations,
+
+                hash:
+                    "SHA-256"
+            },
+
+            passwordKey,
+
+            512
         );
 
 
-      /*
-       * Generate a random marker used to identify this browser's
-       * remembered session.
-       */
-
-      const marker =
-        crypto.getRandomValues(
-          new Uint8Array(32)
+    const derived =
+        new Uint8Array(
+            derivedBits
         );
 
 
-      /*
-       * Store only the marker.
-       *
-       * The actual derived keys remain in memory for this page
-       * session.
-       *
-       * On a future visit the browser will therefore still need
-       * a fresh authentication step.
-       *
-       * This deliberately avoids putting your password or
-       * encryption keys into localStorage.
-       */
+    const aesKey =
+        await crypto.subtle.importKey(
 
-      localStorage.setItem(
-        REMEMBERED_STORAGE_KEY,
-        JSON.stringify({
-          version: 1,
-          sessionId: sessionId,
-          marker: bytesToBase64(marker)
-        })
-      );
+            "raw",
 
+            derived.slice(
+                0,
+                32
+            ),
 
-      return true;
-    }
+            {
+                name:
+                    "AES-CBC"
+            },
+
+            false,
+
+            [
+                "decrypt"
+            ]
+        );
 
 
-    /*
-     * ============================================================
-     * Clear remembered session
-     * ============================================================
-     */
+    const hmacKey =
+        await crypto.subtle.importKey(
 
-    function clearRememberedSession() {
+            "raw",
 
-      localStorage.removeItem(
-        REMEMBERED_STORAGE_KEY
-      );
-    }
+            derived.slice(
+                32,
+                64
+            ),
 
+            {
+                name:
+                    "HMAC",
 
-    /*
-     * ============================================================
-     * Email display
-     * ============================================================
-     */
+                hash:
+                    "SHA-256"
+            },
 
-    function formatEmailMeta(
-      email
-    ) {
+            false,
 
-      let dateText = "";
-
-
-      if (email.date) {
-
-        const date =
-          new Date(
-            email.date
-          );
+            [
+                "sign"
+            ]
+        );
 
 
-        if (
-          !Number.isNaN(
-            date.getTime()
-          )
-        ) {
+    return {
 
-          dateText =
-            date.toLocaleString(
-              undefined,
-              {
-                dateStyle: "medium",
-                timeStyle: "short"
-              }
+        aesKey:
+            aesKey,
+
+        hmacKey:
+            hmacKey
+    };
+}
+
+
+/* =========================================================
+   DECRYPTION
+   ========================================================= */
+
+async function decryptDashboardData(
+
+    encryptedData,
+
+    aesKey,
+
+    hmacKey
+
+) {
+
+    const iv =
+        base64ToBytes(
+            encryptedData.iv
+        );
+
+
+    const ciphertext =
+        base64ToBytes(
+            encryptedData.ciphertext
+        );
+
+
+    const expectedMac =
+        base64ToBytes(
+            encryptedData.mac
+        );
+
+
+    const authenticatedText =
+        "1|" +
+        encryptedData.salt +
+        "|" +
+        encryptedData.iv +
+        "|" +
+        encryptedData.ciphertext;
+
+
+    const authenticatedBytes =
+        new TextEncoder()
+            .encode(
+                authenticatedText
             );
-        }
-      }
 
 
-      const sender =
-        email.sender || "";
+    const actualMac =
+        new Uint8Array(
 
+            await crypto.subtle.sign(
 
-      if (
-        sender &&
-        dateText
-      ) {
-        return (
-          sender +
-          " · " +
-          dateText
+                "HMAC",
+
+                hmacKey,
+
+                authenticatedBytes
+            )
         );
-      }
 
 
-      return (
-        sender ||
-        dateText
-      );
-    }
-
-
-    function displayEmails(
-      emails
+    if (
+        !constantTimeEqual(
+            actualMac,
+            expectedMac
+        )
     ) {
 
-      const list =
-        document.getElementById(
-          "emailList"
-        );
-
-
-      const status =
-        document.getElementById(
-          "emailStatus"
-        );
-
-
-      if (!Array.isArray(emails)) {
         throw new Error(
-          "Email data is not an array."
-        );
-      }
-
-
-      list.innerHTML = "";
-
-
-      if (emails.length === 0) {
-
-        list.innerHTML =
-          '<div class="placeholder">' +
-          "No email found." +
-          "</div>";
-
-
-        status.textContent =
-          "0 messages";
-
-
-        return;
-      }
-
-
-      for (
-        const email of emails
-      ) {
-
-        const article =
-          document.createElement(
-            "article"
-          );
-
-
-        article.className =
-          "email";
-
-
-        const subject =
-          document.createElement(
-            "div"
-          );
-
-
-        subject.className =
-          "email-subject";
-
-
-        subject.textContent =
-          email.subject ||
-          "(No subject)";
-
-
-        const meta =
-          document.createElement(
-            "div"
-          );
-
-
-        meta.className =
-          "email-meta";
-
-
-        meta.textContent =
-          formatEmailMeta(
-            email
-          );
-
-
-        const snippet =
-          document.createElement(
-            "div"
-          );
-
-
-        snippet.className =
-          "email-snippet";
-
-
-        snippet.textContent =
-          email.snippet ||
-          "";
-
-
-        article.appendChild(
-          subject
-        );
-
-        article.appendChild(
-          meta
-        );
-
-        article.appendChild(
-          snippet
-        );
-
-
-        list.appendChild(
-          article
-        );
-      }
-
-
-      status.textContent =
-        emails.length +
-        (
-          emails.length === 1
-            ? " message"
-            : " messages"
+            "Incorrect password or invalid dashboard data."
         );
     }
 
 
-    /*
-     * ============================================================
-     * UI helpers
-     * ============================================================
-     */
+    const plaintext =
+        await crypto.subtle.decrypt(
 
-    function showDashboard() {
+            {
+                name:
+                    "AES-CBC",
 
-      document
-        .getElementById(
-          "loginScreen"
-        )
-        .classList
-        .add("hidden");
+                iv:
+                    iv
+            },
 
+            aesKey,
 
-      document
-        .getElementById(
-          "dashboard"
-        )
-        .classList
-        .remove("hidden");
-    }
+            ciphertext
+        );
 
 
-    function showLogin() {
-
-      document
-        .getElementById(
-          "dashboard"
-        )
-        .classList
-        .add("hidden");
+    const text =
+        new TextDecoder()
+            .decode(
+                plaintext
+            );
 
 
-      document
-        .getElementById(
-          "loginScreen"
-        )
-        .classList
-        .remove("hidden");
-    }
+    return JSON.parse(
+        text
+    );
+}
 
 
-    function showLoginError(
-      message
+/* =========================================================
+   FETCH
+   ========================================================= */
+
+async function fetchEncryptedData() {
+
+    const response =
+        await fetch(
+
+            DATA_URL +
+            "?t=" +
+            Date.now(),
+
+            {
+                cache:
+                    "no-store"
+            }
+        );
+
+
+    if (
+        !response.ok
     ) {
 
-      const error =
-        document.getElementById(
-          "loginError"
+        throw new Error(
+
+            "Could not load " +
+            "dashboard-data.json " +
+            "(" +
+            response.status +
+            ")."
         );
-
-
-      error.textContent =
-        message;
-
-
-      error.classList.remove(
-        "hidden"
-      );
     }
 
 
-    function clearLoginError() {
+    return response.json();
+}
 
-      const error =
-        document.getElementById(
-          "loginError"
+
+/* =========================================================
+   UNLOCK
+   ========================================================= */
+
+async function unlockWithPassword(
+    password
+) {
+
+    const encrypted =
+        await fetchEncryptedData();
+
+
+    const salt =
+        base64ToBytes(
+            encrypted.salt
         );
 
 
-      error.textContent =
+    const keys =
+        await deriveKeys(
+
+            password,
+
+            salt,
+
+            encrypted.iterations
+        );
+
+
+    const data =
+        await decryptDashboardData(
+
+            encrypted,
+
+            keys.aesKey,
+
+            keys.hmacKey
+        );
+
+
+    if (
+        !data ||
+        !Array.isArray(
+            data.calendar
+        ) ||
+        !Array.isArray(
+            data.rss
+        )
+    ) {
+
+        throw new Error(
+            "Dashboard data has an invalid format."
+        );
+    }
+
+
+    currentAESKey =
+        keys.aesKey;
+
+
+    currentHMACKey =
+        keys.hmacKey;
+
+
+    displayDashboard(
+        data
+    );
+
+
+    showDashboard();
+}
+
+
+/* =========================================================
+   DISPLAY DASHBOARD
+   ========================================================= */
+
+function displayDashboard(
+    data
+) {
+
+    displayCalendar(
+        data.calendar
+    );
+
+
+    displayRSS(
+        data.rss
+    );
+
+
+    const updated =
+        data.updatedAt
+            ? new Date(
+                data.updatedAt
+              ).toLocaleString()
+            : "unknown";
+
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "Updated " +
+        updated;
+}
+
+
+/* =========================================================
+   CALENDAR DISPLAY
+   ========================================================= */
+
+function displayCalendar(
+    events
+) {
+
+    const container =
+        document.getElementById(
+            "calendar"
+        );
+
+
+    container.innerHTML =
         "";
 
 
-      error.classList.add(
-        "hidden"
-      );
+    if (
+        !events.length
+    ) {
+
+        container.innerHTML =
+            '<div class="empty">' +
+            'No upcoming events.' +
+            '</div>';
+
+        return;
     }
 
 
-    /*
-     * ============================================================
-     * Unlock button
-     * ============================================================
-     */
+    events
+        .slice()
+        .sort(
+            function(a, b) {
 
-    async function handleUnlock() {
+                return (
+                    new Date(a.start) -
+                    new Date(b.start)
+                );
+            }
+        )
+        .forEach(
+            function(event) {
 
-      const passwordInput =
-        document.getElementById(
-          "password"
+                const wrapper =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                wrapper.className =
+                    "calendar-event";
+
+
+                const title =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                title.className =
+                    "event-title";
+
+
+                title.textContent =
+                    event.title;
+
+
+                wrapper.appendChild(
+                    title
+                );
+
+
+                const time =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                time.className =
+                    "event-time";
+
+
+                if (
+                    event.allDay
+                ) {
+
+                    time.textContent =
+                        formatDate(
+                            event.start
+                        );
+
+                } else {
+
+                    time.textContent =
+                        formatEventTime(
+                            event.start,
+                            event.end
+                        );
+                }
+
+
+                wrapper.appendChild(
+                    time
+                );
+
+
+                if (
+                    event.location
+                ) {
+
+                    const location =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    location.className =
+                        "event-location";
+
+
+                    location.textContent =
+                        event.location;
+
+
+                    wrapper.appendChild(
+                        location
+                    );
+                }
+
+
+                if (
+                    event.calendar
+                ) {
+
+                    const calendar =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    calendar.className =
+                        "event-calendar";
+
+
+                    const dot =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    dot.className =
+                        "calendar-dot";
+
+
+                    if (
+                        event.calendarColor
+                    ) {
+
+                        dot.style.backgroundColor =
+                            event.calendarColor;
+                    }
+
+
+                    calendar.appendChild(
+                        dot
+                    );
+
+
+                    const calendarName =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    calendarName.textContent =
+                        event.calendar;
+
+
+                    calendar.appendChild(
+                        calendarName
+                    );
+
+
+                    wrapper.appendChild(
+                        calendar
+                    );
+                }
+
+
+                container.appendChild(
+                    wrapper
+                );
+            }
         );
+}
 
 
-      const rememberMe =
-        document.getElementById(
-          "rememberMe"
-        );
+/* =========================================================
+   DATE FORMATTING
+   ========================================================= */
 
+function formatDate(
+    dateString
+) {
 
-      const unlockButton =
-        document.getElementById(
-          "unlockButton"
-        );
+    return new Date(
+        dateString
+    ).toLocaleDateString(
 
+        undefined,
 
-      if (
-        !passwordInput ||
-        !rememberMe ||
-        !unlockButton
-      ) {
+        {
+            weekday:
+                "short",
 
-        alert(
-          "Dashboard error: login controls could not be found."
-        );
+            month:
+                "short",
 
-        return;
-      }
-
-
-      const password =
-        passwordInput.value;
-
-
-      if (!password) {
-
-        showLoginError(
-          "Enter your password."
-        );
-
-        return;
-      }
-
-
-      clearLoginError();
-
-
-      unlockButton.disabled =
-        true;
-
-
-      unlockButton.textContent =
-        "Unlocking…";
-
-
-      try {
-
-        /*
-         * This is the important part:
-         *
-         * If this succeeds, the password is correct and the
-         * encrypted email file was successfully decrypted.
-         */
-
-        await unlockWithPassword(
-          password
-        );
-
-
-        /*
-         * Remember-device storage is deliberately treated as
-         * optional. Failure here must NOT prevent login.
-         */
-
-        if (
-          rememberMe.checked
-        ) {
-
-          try {
-
-            await createRememberedSession(
-              currentAESKey,
-              currentHMACKey
-            );
-
-          } catch (
-            rememberError
-          ) {
-
-            console.error(
-              "Remember-device setup failed:",
-              rememberError
-            );
-
-            /*
-             * Do not prevent login.
-             */
-
-            clearRememberedSession();
-          }
-
-        } else {
-
-          clearRememberedSession();
+            day:
+                "numeric"
         }
+    );
+}
 
 
-        passwordInput.value =
-          "";
+function formatEventTime(
+    startString,
+    endString
+) {
 
-
-        showDashboard();
-
-      } catch (
-        error
-      ) {
-
-        console.error(
-          "Unlock failed:",
-          error
+    const start =
+        new Date(
+            startString
         );
 
 
-        showLoginError(
-          "Unlock failed: " +
-          (
-            error &&
-            error.message
-              ? error.message
-              : String(error)
-          )
+    const end =
+        new Date(
+            endString
         );
 
-      } finally {
 
-        unlockButton.disabled =
-          false;
+    const date =
+        start.toLocaleDateString(
+
+            undefined,
+
+            {
+                weekday:
+                    "short",
+
+                month:
+                    "short",
+
+                day:
+                    "numeric"
+            }
+        );
 
 
-        unlockButton.textContent =
-          "Unlock";
-      }
+    const startTime =
+        start.toLocaleTimeString(
+
+            undefined,
+
+            {
+                hour:
+                    "numeric",
+
+                minute:
+                    "2-digit"
+            }
+        );
+
+
+    const endTime =
+        end.toLocaleTimeString(
+
+            undefined,
+
+            {
+                hour:
+                    "numeric",
+
+                minute:
+                    "2-digit"
+            }
+        );
+
+
+    return (
+        date +
+        " · " +
+        startTime +
+        "–" +
+        endTime
+    );
+}
+
+
+/* =========================================================
+   RSS DISPLAY
+   ========================================================= */
+
+function displayRSS(
+    feeds
+) {
+
+    const container =
+        document.getElementById(
+            "rss"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    if (
+        !feeds.length
+    ) {
+
+        container.innerHTML =
+            '<div class="empty">' +
+            'No RSS feeds configured.' +
+            '</div>';
+
+        return;
     }
 
 
-    /*
-     * ============================================================
-     * Refresh
-     * ============================================================
-     */
+    feeds.forEach(
+        function(feed) {
 
-    async function refreshDashboard() {
+            const feedWrapper =
+                document.createElement(
+                    "div"
+                );
 
-      const button =
-        document.getElementById(
-          "refreshButton"
+
+            feedWrapper.className =
+                "feed";
+
+
+            const feedTitle =
+                document.createElement(
+                    "div"
+                );
+
+
+            feedTitle.className =
+                "feed-title";
+
+
+            feedTitle.textContent =
+                feed.name;
+
+
+            feedWrapper.appendChild(
+                feedTitle
+            );
+
+
+            if (
+                feed.error
+            ) {
+
+                const error =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                error.className =
+                    "empty";
+
+
+                error.textContent =
+                    feed.error;
+
+
+                feedWrapper.appendChild(
+                    error
+                );
+
+
+                container.appendChild(
+                    feedWrapper
+                );
+
+
+                return;
+            }
+
+
+            if (
+                !feed.items ||
+                !feed.items.length
+            ) {
+
+                const empty =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                empty.className =
+                    "empty";
+
+
+                empty.textContent =
+                    "No articles.";
+
+
+                feedWrapper.appendChild(
+                    empty
+                );
+
+            } else {
+
+                feed.items.forEach(
+                    function(item) {
+
+                        const link =
+                            document.createElement(
+                                "a"
+                            );
+
+
+                        link.className =
+                            "rss-item";
+
+
+                        link.href =
+                            item.link ||
+                            "#";
+
+
+                        link.target =
+                            "_blank";
+
+
+                        link.rel =
+                            "noopener noreferrer";
+
+
+                        const title =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        title.className =
+                            "rss-item-title";
+
+
+                        title.textContent =
+                            item.title ||
+                            "(Untitled)";
+
+
+                        link.appendChild(
+                            title
+                        );
+
+
+                        if (
+                            item.date
+                        ) {
+
+                            const meta =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            meta.className =
+                                "rss-item-meta";
+
+
+                            meta.textContent =
+                                formatRSSDate(
+                                    item.date
+                                );
+
+
+                            link.appendChild(
+                                meta
+                            );
+                        }
+
+
+                        feedWrapper.appendChild(
+                            link
+                        );
+                    }
+                );
+            }
+
+
+            container.appendChild(
+                feedWrapper
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   RSS DATE
+   ========================================================= */
+
+function formatRSSDate(
+    dateString
+) {
+
+    const date =
+        new Date(
+            dateString
         );
 
 
-      button.disabled =
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return dateString;
+    }
+
+
+    return date.toLocaleString(
+
+        undefined,
+
+        {
+            month:
+                "short",
+
+            day:
+                "numeric",
+
+            hour:
+                "numeric",
+
+            minute:
+                "2-digit"
+        }
+    );
+}
+
+
+/* =========================================================
+   REFRESH
+   ========================================================= */
+
+async function refreshDashboard() {
+
+    const button =
+        document.getElementById(
+            "refreshButton"
+        );
+
+
+    button.disabled =
         true;
 
 
-      button.textContent =
+    button.textContent =
         "Refreshing…";
 
 
-      try {
+    try {
 
         if (
-          !currentAESKey ||
-          !currentHMACKey
+            !currentAESKey ||
+            !currentHMACKey
         ) {
 
-          throw new Error(
-            "The dashboard is locked."
-          );
+            throw new Error(
+                "The dashboard is locked."
+            );
         }
 
 
-        /*
-         * Fetches:
-         *
-         * email-data.json?t=<current time>
-         *
-         * with cache: no-store
-         */
-
-        const encryptedData =
-          await fetchEncryptedEmailData();
+        const encrypted =
+            await fetchEncryptedData();
 
 
-        /*
-         * Verify and decrypt using the keys already held in
-         * memory.
-         */
+        const data =
+            await decryptDashboardData(
 
-        const emails =
-          await decryptEmailData(
-            encryptedData,
-            currentAESKey,
-            currentHMACKey
-          );
+                encrypted,
+
+                currentAESKey,
+
+                currentHMACKey
+            );
 
 
-        displayEmails(
-          emails
+        if (
+            !data ||
+            !Array.isArray(
+                data.calendar
+            ) ||
+            !Array.isArray(
+                data.rss
+            )
+        ) {
+
+            throw new Error(
+                "Invalid dashboard data."
+            );
+        }
+
+
+        displayDashboard(
+            data
         );
 
-      } catch (
-        error
-      ) {
+
+    } catch (error) {
 
         console.error(
-          "Refresh failed:",
-          error
+            "Refresh failed:",
+            error
         );
 
 
         alert(
-          "Could not refresh the email data:\n\n" +
-          (
-            error.message ||
-            String(error)
-          )
+            "Could not refresh:\n\n" +
+            error.message
         );
 
-      } finally {
+
+    } finally {
 
         button.disabled =
-          false;
+            false;
 
 
         button.textContent =
-          "Refresh";
-      }
+            "Refresh";
     }
+}
 
 
-    /*
-     * ============================================================
-     * Lock
-     * ============================================================
-     */
+/* =========================================================
+   LOGIN UI
+   ========================================================= */
 
-    function lockDashboard() {
+function showDashboard() {
 
-      /*
-       * Remove remembered-device information.
-       */
-
-      clearRememberedSession();
-
-
-      /*
-       * Remove in-memory secrets.
-       */
-
-      currentAESKey =
-        null;
-
-
-      currentHMACKey =
-        null;
-
-
-      currentPassword =
-        null;
-
-
-      /*
-       * Reset login UI.
-       */
-
-      document.getElementById(
-        "password"
-      ).value = "";
-
-
-      document.getElementById(
-        "rememberMe"
-      ).checked = false;
-
-
-      clearLoginError();
-
-
-      showLogin();
-    }
-
-
-    /*
-     * ============================================================
-     * Event handlers
-     * ============================================================
-     */
-
-    document
-      .getElementById(
-        "unlockButton"
-      )
-      .addEventListener(
-        "click",
-        handleUnlock
-      );
-
-
-    document
-      .getElementById(
-        "password"
-      )
-      .addEventListener(
-        "keydown",
-        function(event) {
-
-          if (
-            event.key === "Enter"
-          ) {
-
-            handleUnlock();
-          }
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "refreshButton"
-      )
-      .addEventListener(
-        "click",
-        refreshDashboard
-      );
-
-
-    document
-      .getElementById(
-        "lockButton"
-      )
-      .addEventListener(
-        "click",
-        lockDashboard
-      );
-
-
-    /*
-     * ============================================================
-     * Startup
-     * ============================================================
-     */
-
-    window.addEventListener(
-      "DOMContentLoaded",
-      function() {
-
-        /*
-         * We intentionally do NOT automatically unlock here.
-         *
-         * A random localStorage token by itself cannot decrypt
-         * email-data.json.
-         *
-         * Therefore the password is still required after a full
-         * reload. This is the secure fallback.
-         */
-
-        showLogin();
-
-        document
-          .getElementById(
-            "password"
-          )
-          .focus();
-
-      }
+    document.getElementById(
+        "loginScreen"
+    ).classList.add(
+        "hidden"
     );
 
-  </script>
+
+    document.getElementById(
+        "dashboard"
+    ).classList.remove(
+        "hidden"
+    );
+}
+
+
+function showLogin() {
+
+    document.getElementById(
+        "dashboard"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "loginScreen"
+    ).classList.remove(
+        "hidden"
+    );
+}
+
+
+function showLoginError(
+    message
+) {
+
+    const element =
+        document.getElementById(
+            "loginError"
+        );
+
+
+    element.textContent =
+        message;
+
+
+    element.classList.remove(
+        "hidden"
+    );
+}
+
+
+function clearLoginError() {
+
+    document.getElementById(
+        "loginError"
+    ).classList.add(
+        "hidden"
+    );
+}
+
+
+/* =========================================================
+   LOCK
+   ========================================================= */
+
+function lockDashboard() {
+
+    currentAESKey =
+        null;
+
+
+    currentHMACKey =
+        null;
+
+
+    showLogin();
+
+
+    document.getElementById(
+        "password"
+    ).value =
+        "";
+
+
+    clearLoginError();
+
+
+    document.getElementById(
+        "password"
+    ).focus();
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+document.getElementById(
+    "unlockButton"
+).addEventListener(
+    "click",
+    async function() {
+
+        const button =
+            document.getElementById(
+                "unlockButton"
+            );
+
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value;
+
+
+        if (!password) {
+
+            showLoginError(
+                "Enter your password."
+            );
+
+            return;
+        }
+
+
+        clearLoginError();
+
+
+        button.disabled =
+            true;
+
+
+        button.textContent =
+            "Unlocking…";
+
+
+        try {
+
+            await unlockWithPassword(
+                password
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Unlock failed:",
+                error
+            );
+
+
+            showLoginError(
+                error.message ||
+                "Incorrect password or invalid data."
+            );
+
+
+        } finally {
+
+            button.disabled =
+                false;
+
+
+            button.textContent =
+                "Unlock";
+        }
+    }
+);
+
+
+/* =========================================================
+   ENTER KEY
+   ========================================================= */
+
+document.getElementById(
+    "password"
+).addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            document.getElementById(
+                "unlockButton"
+            ).click();
+        }
+    }
+);
+
+
+/* =========================================================
+   REFRESH / LOCK
+   ========================================================= */
+
+document.getElementById(
+    "refreshButton"
+).addEventListener(
+    "click",
+    refreshDashboard
+);
+
+
+document.getElementById(
+    "lockButton"
+).addEventListener(
+    "click",
+    lockDashboard
+);
+
+</script>
 
 </body>
 </html>
