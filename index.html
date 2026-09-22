@@ -200,6 +200,49 @@ button {
 }
 
 
+.remember-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-top:
+        16px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        0.9rem;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+}
+
+.remember-row input {
+
+    width:
+        16px;
+
+    height:
+        16px;
+
+    margin:
+        0;
+
+    accent-color:
+        var(--accent);
+}
+
+
 .login-actions {
 
     display:
@@ -419,6 +462,53 @@ header h1 {
 
     font-size:
         1.15rem;
+}
+
+.calendar-filter {
+
+    min-width:
+        180px;
+
+    max-width:
+        280px;
+
+    padding:
+        8px 10px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        9px;
+
+    background:
+        var(--bg);
+
+    color:
+        var(--text);
+}
+
+@media (
+    max-width: 500px
+) {
+
+    .panel-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+    .calendar-filter {
+
+        width:
+            100%;
+
+        max-width:
+            none;
+    }
 }
 
 
@@ -710,6 +800,20 @@ header h1 {
         >
 
 
+        <label class="remember-row">
+
+            <input
+                id="rememberMe"
+                type="checkbox"
+            >
+
+            <span>
+                Remember me on this device
+            </span>
+
+        </label>
+
+
         <div class="login-actions">
 
             <button
@@ -796,6 +900,16 @@ header h1 {
                         Calendar
                     </h2>
 
+                    <select
+                        id="calendarFilter"
+                        class="calendar-filter"
+                        aria-label="Filter calendar"
+                    >
+                        <option value="__all__">
+                            All calendars
+                        </option>
+                    </select>
+
                 </div>
 
 
@@ -856,6 +970,12 @@ let currentAESKey =
 
 let currentHMACKey =
     null;
+
+let currentData =
+    null;
+
+let selectedCalendar =
+    "__all__";
 
 
 /* =========================================================
@@ -1197,11 +1317,328 @@ async function fetchEncryptedData() {
 
 
 /* =========================================================
+   REMEMBER ME
+   ========================================================= */
+
+const KEY_DB_NAME =
+    "privateDashboard";
+
+const KEY_DB_VERSION =
+    1;
+
+const KEY_STORE_NAME =
+    "keys";
+
+
+function openKeyDatabase() {
+
+    return new Promise(
+        function(resolve, reject) {
+
+            const request =
+                indexedDB.open(
+                    KEY_DB_NAME,
+                    KEY_DB_VERSION
+                );
+
+
+            request.onupgradeneeded =
+                function() {
+
+                    const db =
+                        request.result;
+
+
+                    if (
+                        !db.objectStoreNames.contains(
+                            KEY_STORE_NAME
+                        )
+                    ) {
+
+                        db.createObjectStore(
+                            KEY_STORE_NAME
+                        );
+                    }
+                };
+
+
+            request.onsuccess =
+                function() {
+
+                    resolve(
+                        request.result
+                    );
+                };
+
+
+            request.onerror =
+                function() {
+
+                    reject(
+                        request.error
+                    );
+                };
+        }
+    );
+}
+
+
+async function saveRememberedKeys(
+    aesKey,
+    hmacKey
+) {
+
+    const db =
+        await openKeyDatabase();
+
+
+    return new Promise(
+        function(resolve, reject) {
+
+            const transaction =
+                db.transaction(
+                    KEY_STORE_NAME,
+                    "readwrite"
+                );
+
+
+            transaction
+                .objectStore(
+                    KEY_STORE_NAME
+                )
+                .put(
+                    {
+                        aesKey:
+                            aesKey,
+
+                        hmacKey:
+                            hmacKey
+                    },
+                    "dashboard"
+                );
+
+
+            transaction.oncomplete =
+                function() {
+
+                    db.close();
+
+                    resolve();
+                };
+
+
+            transaction.onerror =
+                function() {
+
+                    db.close();
+
+                    reject(
+                        transaction.error
+                    );
+                };
+        }
+    );
+}
+
+
+async function loadRememberedKeys() {
+
+    const db =
+        await openKeyDatabase();
+
+
+    return new Promise(
+        function(resolve, reject) {
+
+            const transaction =
+                db.transaction(
+                    KEY_STORE_NAME,
+                    "readonly"
+                );
+
+
+            const request =
+                transaction
+                    .objectStore(
+                        KEY_STORE_NAME
+                    )
+                    .get(
+                        "dashboard"
+                    );
+
+
+            request.onsuccess =
+                function() {
+
+                    db.close();
+
+                    resolve(
+                        request.result ||
+                        null
+                    );
+                };
+
+
+            request.onerror =
+                function() {
+
+                    db.close();
+
+                    reject(
+                        request.error
+                    );
+                };
+        }
+    );
+}
+
+
+async function clearRememberedKeys() {
+
+    try {
+
+        const db =
+            await openKeyDatabase();
+
+
+        await new Promise(
+            function(resolve, reject) {
+
+                const transaction =
+                    db.transaction(
+                        KEY_STORE_NAME,
+                        "readwrite"
+                    );
+
+
+                transaction
+                    .objectStore(
+                        KEY_STORE_NAME
+                    )
+                    .delete(
+                        "dashboard"
+                    );
+
+
+                transaction.oncomplete =
+                    resolve;
+
+
+                transaction.onerror =
+                    function() {
+
+                        reject(
+                            transaction.error
+                        );
+                    };
+            }
+        );
+
+
+        db.close();
+
+    } catch (error) {
+
+        console.warn(
+            "Could not clear remembered keys:",
+            error
+        );
+    }
+}
+
+
+async function tryRememberedLogin() {
+
+    try {
+
+        const remembered =
+            await loadRememberedKeys();
+
+
+        if (
+            !remembered ||
+            !remembered.aesKey ||
+            !remembered.hmacKey
+        ) {
+
+            return false;
+        }
+
+
+        const encrypted =
+            await fetchEncryptedData();
+
+
+        const data =
+            await decryptDashboardData(
+
+                encrypted,
+
+                remembered.aesKey,
+
+                remembered.hmacKey
+            );
+
+
+        if (
+            !data ||
+            !Array.isArray(
+                data.calendar
+            ) ||
+            !Array.isArray(
+                data.rss
+            )
+        ) {
+
+            throw new Error(
+                "Invalid remembered dashboard data."
+            );
+        }
+
+
+        currentAESKey =
+            remembered.aesKey;
+
+
+        currentHMACKey =
+            remembered.hmacKey;
+
+
+        currentData =
+            data;
+
+
+        displayDashboard(
+            data
+        );
+
+
+        showDashboard();
+
+        return true;
+
+    } catch (error) {
+
+        console.warn(
+            "Remembered login failed:",
+            error
+        );
+
+
+        await clearRememberedKeys();
+
+        return false;
+    }
+}
+
+
+/* =========================================================
    UNLOCK
    ========================================================= */
 
 async function unlockWithPassword(
-    password
+    password,
+    remember
 ) {
 
     const encrypted =
@@ -1259,6 +1696,32 @@ async function unlockWithPassword(
     currentHMACKey =
         keys.hmacKey;
 
+    currentData =
+        data;
+
+
+    if (remember) {
+
+        try {
+
+            await saveRememberedKeys(
+                keys.aesKey,
+                keys.hmacKey
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Could not remember login:",
+                error
+            );
+        }
+
+    } else {
+
+        await clearRememberedKeys();
+    }
+
 
     displayDashboard(
         data
@@ -1276,6 +1739,14 @@ async function unlockWithPassword(
 function displayDashboard(
     data
 ) {
+
+    currentData =
+        data;
+
+    populateCalendarFilter(
+        data.calendar
+    );
+
 
     displayCalendar(
         data.calendar
@@ -1303,6 +1774,123 @@ function displayDashboard(
 }
 
 
+function populateCalendarFilter(
+    events
+) {
+
+    const select =
+        document.getElementById(
+            "calendarFilter"
+        );
+
+    const calendars =
+        new Map();
+
+
+    events.forEach(
+        function(event) {
+
+            const id =
+                event.calendarId ||
+                event.calendar ||
+                "(Unknown)";
+
+            const name =
+                event.calendar ||
+                "(Unnamed calendar)";
+
+
+            if (
+                !calendars.has(id)
+            ) {
+
+                calendars.set(
+                    id,
+                    name
+                );
+            }
+        }
+    );
+
+
+    select.innerHTML =
+        "";
+
+
+    const allOption =
+        document.createElement(
+            "option"
+        );
+
+    allOption.value =
+        "__all__";
+
+    allOption.textContent =
+        "All calendars";
+
+    select.appendChild(
+        allOption
+    );
+
+
+    Array.from(
+        calendars.entries()
+    )
+    .sort(
+        function(a, b) {
+
+            return a[1].localeCompare(
+                b[1]
+            );
+        }
+    )
+    .forEach(
+        function(entry) {
+
+            const id =
+                entry[0];
+
+            const name =
+                entry[1];
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                id;
+
+            option.textContent =
+                name;
+
+            select.appendChild(
+                option
+            );
+        }
+    );
+
+
+    const valid =
+        selectedCalendar === "__all__" ||
+        calendars.has(
+            selectedCalendar
+        );
+
+
+    if (!valid) {
+
+        selectedCalendar =
+            "__all__";
+    }
+
+
+    select.value =
+        selectedCalendar;
+}
+
+
 /* =========================================================
    CALENDAR DISPLAY
    ========================================================= */
@@ -1321,8 +1909,25 @@ function displayCalendar(
         "";
 
 
+    const filteredEvents =
+        selectedCalendar === "__all__"
+            ? events
+            : events.filter(
+                function(event) {
+
+                    const id =
+                        event.calendarId ||
+                        event.calendar ||
+                        "(Unknown)";
+
+                    return id ===
+                        selectedCalendar;
+                }
+            );
+
+
     if (
-        !events.length
+        !filteredEvents.length
     ) {
 
         container.innerHTML =
@@ -1334,7 +1939,7 @@ function displayCalendar(
     }
 
 
-    events
+    filteredEvents
         .slice()
         .sort(
             function(a, b) {
@@ -2025,7 +2630,7 @@ function clearLoginError() {
    LOCK
    ========================================================= */
 
-function lockDashboard() {
+async function lockDashboard() {
 
     currentAESKey =
         null;
@@ -2033,6 +2638,23 @@ function lockDashboard() {
 
     currentHMACKey =
         null;
+
+
+    currentData =
+        null;
+
+
+    selectedCalendar =
+        "__all__";
+
+
+    await clearRememberedKeys();
+
+
+    document.getElementById(
+        "rememberMe"
+    ).checked =
+        false;
 
 
     showLogin();
@@ -2075,6 +2697,12 @@ document.getElementById(
             ).value;
 
 
+        const remember =
+            document.getElementById(
+                "rememberMe"
+            ).checked;
+
+
         if (!password) {
 
             showLoginError(
@@ -2099,7 +2727,8 @@ document.getElementById(
         try {
 
             await unlockWithPassword(
-                password
+                password,
+                remember
             );
 
 
@@ -2154,6 +2783,30 @@ document.getElementById(
 
 
 /* =========================================================
+   CALENDAR FILTER
+   ========================================================= */
+
+document.getElementById(
+    "calendarFilter"
+).addEventListener(
+    "change",
+    function(event) {
+
+        selectedCalendar =
+            event.target.value;
+
+
+        if (currentData) {
+
+            displayCalendar(
+                currentData.calendar
+            );
+        }
+    }
+);
+
+
+/* =========================================================
    REFRESH / LOCK
    ========================================================= */
 
@@ -2170,6 +2823,43 @@ document.getElementById(
 ).addEventListener(
     "click",
     lockDashboard
+);
+
+
+/* =========================================================
+   AUTOMATIC REMEMBERED LOGIN
+   ========================================================= */
+
+window.addEventListener(
+    "load",
+    async function() {
+
+        try {
+
+            const restored =
+                await tryRememberedLogin();
+
+
+            if (!restored) {
+
+                document.getElementById(
+                    "password"
+                ).focus();
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Automatic login failed:",
+                error
+            );
+
+
+            document.getElementById(
+                "password"
+            ).focus();
+        }
+    }
 );
 
 </script>
