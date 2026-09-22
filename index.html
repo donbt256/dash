@@ -960,54 +960,46 @@
      * ============================================================
      */
 
-    async function unlockWithPassword(
-      password
-    ) {
+    async function unlockWithPassword(password) {
+  const encryptedData =
+    await fetchEncryptedEmailData();
 
-      const encryptedData =
-        await fetchEncryptedEmailData();
+  const salt =
+    base64ToBytes(encryptedData.salt);
 
+  const keys =
+    await deriveKeys(
+      password,
+      salt,
+      encryptedData.iterations
+    );
 
-      const salt =
-        base64ToBytes(
-          encryptedData.salt
-        );
+  const decryptedData =
+    await decryptEmailData(
+      encryptedData,
+      keys.aesKey,
+      keys.hmacKey
+    );
 
+  if (
+    !decryptedData ||
+    !Array.isArray(decryptedData.emails)
+  ) {
+    throw new Error(
+      "Decrypted email data does not contain an emails array."
+    );
+  }
 
-      const keys =
-        await deriveKeys(
-          password,
-          salt,
-          encryptedData.iterations
-        );
+  currentAESKey = keys.aesKey;
+  currentHMACKey = keys.hmacKey;
+  currentPassword = password;
 
+  displayEmails(
+    decryptedData.emails
+  );
 
-      const emails =
-        await decryptEmailData(
-          encryptedData,
-          keys.aesKey,
-          keys.hmacKey
-        );
-
-
-      currentAESKey =
-        keys.aesKey;
-
-      currentHMACKey =
-        keys.hmacKey;
-
-      currentPassword =
-        password;
-
-
-      displayEmails(
-        emails
-      );
-
-
-      return keys;
-    }
-
+  return keys;
+}
 
     /*
      * ============================================================
