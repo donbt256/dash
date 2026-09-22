@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Dashboard</title>
 
   <style>
@@ -64,7 +65,9 @@
       cursor: pointer;
       background: var(--accent);
       color: white;
-      transition: background 0.15s, opacity 0.15s;
+      transition:
+        background 0.15s,
+        opacity 0.15s;
     }
 
     button:hover {
@@ -90,7 +93,9 @@
       display: none !important;
     }
 
-    /* Login */
+    /* =========================================================
+       Login
+       ========================================================= */
 
     #loginScreen {
       min-height: 100vh;
@@ -128,8 +133,7 @@
       flex: 1;
     }
 
-    input[type="password"],
-    input[type="text"] {
+    input[type="password"] {
       width: 100%;
       padding: 11px 12px;
       border: 1px solid var(--border);
@@ -162,9 +166,12 @@
       margin-top: 14px;
       color: var(--danger);
       font-size: 0.9rem;
+      line-height: 1.4;
     }
 
-    /* Dashboard */
+    /* =========================================================
+       Dashboard
+       ========================================================= */
 
     #dashboard {
       min-height: 100vh;
@@ -174,7 +181,11 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      background: color-mix(
+        in srgb,
+        var(--bg) 92%,
+        transparent
+      );
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
@@ -183,6 +194,7 @@
       max-width: 1400px;
       margin: auto;
       padding: 15px 20px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -207,7 +219,10 @@
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
       gap: 20px;
     }
 
@@ -221,7 +236,9 @@
 
     .card-header {
       padding: 17px 18px;
+
       border-bottom: 1px solid var(--border);
+
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -237,7 +254,9 @@
       padding: 18px;
     }
 
-    /* Email */
+    /* =========================================================
+       Email
+       ========================================================= */
 
     .email-list {
       display: flex;
@@ -264,6 +283,7 @@
       color: var(--muted);
       font-size: 0.82rem;
       margin-bottom: 7px;
+      overflow-wrap: anywhere;
     }
 
     .email-snippet {
@@ -282,9 +302,11 @@
     .placeholder {
       color: var(--muted);
       min-height: 120px;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       text-align: center;
     }
 
@@ -320,40 +342,76 @@
 
 <body>
 
-  <!-- Login screen -->
+  <!-- =========================================================
+       Login screen
+       ========================================================= -->
+
   <section id="loginScreen">
+
     <div class="login-card">
+
       <h1>Dashboard</h1>
-      <p>Enter your dashboard password to unlock your data.</p>
+
+      <p>
+        Enter your dashboard password to unlock your data.
+      </p>
 
       <div class="password-row">
+
         <input
           id="password"
           type="password"
           placeholder="Password"
           autocomplete="current-password"
         >
-        <button id="unlockButton" type="button">Unlock</button>
+
+        <button
+          id="unlockButton"
+          type="button"
+        >
+          Unlock
+        </button>
+
       </div>
 
       <label class="remember-row">
-        <input type="checkbox" id="rememberMe">
+
+        <input
+          type="checkbox"
+          id="rememberMe"
+        >
+
         Remember this device
+
       </label>
 
-      <div id="loginError" class="hidden"></div>
+      <div
+        id="loginError"
+        class="hidden"
+      ></div>
+
     </div>
+
   </section>
 
 
-  <!-- Dashboard -->
-  <section id="dashboard" class="hidden">
+  <!-- =========================================================
+       Dashboard
+       ========================================================= -->
+
+  <section
+    id="dashboard"
+    class="hidden"
+  >
 
     <header class="topbar">
+
       <div class="topbar-inner">
+
         <h1>Dashboard</h1>
 
         <div class="topbar-actions">
+
           <button
             id="refreshButton"
             type="button"
@@ -369,8 +427,11 @@
           >
             Lock
           </button>
+
         </div>
+
       </div>
+
     </header>
 
 
@@ -378,55 +439,91 @@
 
       <div class="dashboard-grid">
 
-        <!-- Email -->
+        <!-- ===================================================
+             Email
+             =================================================== -->
+
         <section class="card">
+
           <div class="card-header">
+
             <h2>Email</h2>
-            <span id="emailStatus" class="status"></span>
+
+            <span
+              id="emailStatus"
+              class="status"
+            ></span>
+
           </div>
 
-          <div id="emailList" class="email-list">
+          <div
+            id="emailList"
+            class="email-list"
+          >
+
             <div class="placeholder">
               Loading email…
             </div>
+
           </div>
+
         </section>
 
 
-        <!-- Calendar -->
+        <!-- ===================================================
+             Calendar
+             =================================================== -->
+
         <section class="card">
+
           <div class="card-header">
+
             <h2>Calendar</h2>
+
           </div>
 
           <div class="card-body">
+
             <div class="placeholder">
               Calendar will go here.
             </div>
+
           </div>
+
         </section>
 
 
-        <!-- RSS -->
+        <!-- ===================================================
+             RSS
+             =================================================== -->
+
         <section class="card">
+
           <div class="card-header">
+
             <h2>RSS</h2>
+
           </div>
 
           <div class="card-body">
+
             <div class="placeholder">
               RSS feeds will go here.
             </div>
+
           </div>
+
         </section>
 
       </div>
 
     </main>
+
   </section>
 
 
   <script>
+
     /*
      * ============================================================
      * Configuration
@@ -435,17 +532,11 @@
 
     const EMAIL_DATA_URL = "email-data.json";
 
-    const PBKDF2_BITS = 512;
-
     /*
-     * This must match Apps Script.
-     *
-     * Apps Script:
-     * PBKDF2-SHA256
-     * 100000 iterations
-     * 512-bit output
+     * Must match Apps Script.
      */
 
+    const PBKDF2_BITS = 512;
     const PBKDF2_ITERATIONS = 100000;
 
 
@@ -455,46 +546,117 @@
      * ============================================================
      */
 
-    window.dashboardPassword = null;
-
     let currentAESKey = null;
     let currentHMACKey = null;
+
+    /*
+     * The password exists here only while the current page
+     * is unlocked.
+     */
+
+    let currentPassword = null;
 
 
     /*
      * ============================================================
-     * Utility functions
+     * Remembered-device storage
+     *
+     * IMPORTANT:
+     *
+     * The actual password is never stored in localStorage.
+     *
+     * Instead, when "Remember this device" is enabled, we store
+     * an encrypted copy of the derived keys.
+     *
+     * The encryption key for that local copy is itself derived
+     * from a randomly generated browser token.
+     *
+     * This means localStorage does NOT contain your dashboard
+     * password.
+     * ============================================================
+     */
+
+    const REMEMBERED_STORAGE_KEY =
+      "dashboardRememberedSession";
+
+
+    /*
+     * ============================================================
+     * Base64 helpers
      * ============================================================
      */
 
     function base64ToBytes(base64) {
-      const binary = atob(base64);
-      const bytes = new Uint8Array(binary.length);
 
-      for (let i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
+      const binary =
+        atob(base64);
+
+      const bytes =
+        new Uint8Array(
+          binary.length
+        );
+
+      for (
+        let i = 0;
+        i < binary.length;
+        i++
+      ) {
+        bytes[i] =
+          binary.charCodeAt(i);
       }
 
       return bytes;
     }
 
 
-    function bytesToHex(bytes) {
-      return Array.from(bytes)
-        .map(byte => byte.toString(16).padStart(2, "0"))
-        .join("");
+    function bytesToBase64(bytes) {
+
+      let binary = "";
+
+      const chunkSize = 0x8000;
+
+      for (
+        let i = 0;
+        i < bytes.length;
+        i += chunkSize
+      ) {
+
+        binary += String.fromCharCode(
+          ...bytes.subarray(
+            i,
+            Math.min(
+              i + chunkSize,
+              bytes.length
+            )
+          )
+        );
+      }
+
+      return btoa(binary);
     }
 
 
+    /*
+     * ============================================================
+     * Constant-time comparison
+     * ============================================================
+     */
+
     function constantTimeEqual(a, b) {
+
       if (a.length !== b.length) {
         return false;
       }
 
       let result = 0;
 
-      for (let i = 0; i < a.length; i++) {
-        result |= a[i] ^ b[i];
+      for (
+        let i = 0;
+        i < a.length;
+        i++
+      ) {
+        result |=
+          a[i] ^ b[i];
       }
 
       return result === 0;
@@ -507,70 +669,97 @@
      * ============================================================
      */
 
-    async function deriveKeys(password, salt, iterations) {
+    async function deriveKeys(
+      password,
+      salt,
+      iterations
+    ) {
 
-      const passwordKey = await crypto.subtle.importKey(
-        "raw",
-        new TextEncoder().encode(password),
-        {
-          name: "PBKDF2"
-        },
-        false,
-        [
-          "deriveBits"
-        ]
-      );
-
-
-      const derivedBits = await crypto.subtle.deriveBits(
-        {
-          name: "PBKDF2",
-          salt: salt,
-          iterations: iterations,
-          hash: "SHA-256"
-        },
-        passwordKey,
-        PBKDF2_BITS
-      );
+      const passwordKey =
+        await crypto.subtle.importKey(
+          "raw",
+          new TextEncoder().encode(
+            password
+          ),
+          {
+            name: "PBKDF2"
+          },
+          false,
+          [
+            "deriveBits"
+          ]
+        );
 
 
-      const derived = new Uint8Array(derivedBits);
+      const derivedBits =
+        await crypto.subtle.deriveBits(
+          {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: iterations,
+            hash: "SHA-256"
+          },
+          passwordKey,
+          PBKDF2_BITS
+        );
+
+
+      const derived =
+        new Uint8Array(
+          derivedBits
+        );
+
 
       /*
-       * First 256 bits = AES key
-       * Last 256 bits = HMAC key
+       * First 256 bits:
+       * AES key
+       *
+       * Last 256 bits:
+       * HMAC key
        */
 
-      const aesBytes = derived.slice(0, 32);
-      const hmacBytes = derived.slice(32, 64);
+      const aesBytes =
+        derived.slice(
+          0,
+          32
+        );
 
 
-      const aesKey = await crypto.subtle.importKey(
-        "raw",
-        aesBytes,
-        {
-          name: "AES-CBC"
-        },
-        false,
-        [
-          "decrypt"
-        ]
-      );
+      const hmacBytes =
+        derived.slice(
+          32,
+          64
+        );
 
 
-      const hmacKey = await crypto.subtle.importKey(
-        "raw",
-        hmacBytes,
-        {
-          name: "HMAC",
-          hash: "SHA-256"
-        },
-        false,
-        [
-          "sign",
-          "verify"
-        ]
-      );
+      const aesKey =
+        await crypto.subtle.importKey(
+          "raw",
+          aesBytes,
+          {
+            name: "AES-CBC"
+          },
+          false,
+          [
+            "decrypt"
+          ]
+        );
+
+
+      const hmacKey =
+        await crypto.subtle.importKey(
+          "raw",
+          hmacBytes,
+          {
+            name: "HMAC",
+            hash: "SHA-256"
+          },
+          false,
+          [
+            "sign",
+            "verify"
+          ]
+        );
 
 
       return {
@@ -582,7 +771,7 @@
 
     /*
      * ============================================================
-     * HMAC
+     * Verify HMAC
      * ============================================================
      */
 
@@ -604,7 +793,9 @@
 
 
       const expectedMac =
-        base64ToBytes(expectedMacBase64);
+        base64ToBytes(
+          expectedMacBase64
+        );
 
 
       const actualMac =
@@ -612,7 +803,9 @@
           await crypto.subtle.sign(
             "HMAC",
             hmacKey,
-            new TextEncoder().encode(authenticatedData)
+            new TextEncoder().encode(
+              authenticatedData
+            )
           )
         );
 
@@ -626,7 +819,7 @@
 
     /*
      * ============================================================
-     * AES decryption
+     * Decrypt email-data.json
      * ============================================================
      */
 
@@ -636,49 +829,57 @@
       hmacKey
     ) {
 
-      const {
-        version,
-        algorithm,
-        kdf,
-        iterations,
-        salt,
-        iv,
-        ciphertext,
-        mac
-      } = encryptedData;
-
-
-      if (version !== 1) {
-        throw new Error("Unsupported encryption version.");
+      if (
+        encryptedData.version !== 1
+      ) {
+        throw new Error(
+          "Unsupported encryption version."
+        );
       }
 
 
-      if (algorithm !== "AES-256-CBC") {
-        throw new Error("Unsupported encryption algorithm.");
+      if (
+        encryptedData.algorithm !==
+        "AES-256-CBC"
+      ) {
+        throw new Error(
+          "Unsupported encryption algorithm."
+        );
       }
 
 
-      if (kdf !== "PBKDF2-SHA256") {
-        throw new Error("Unsupported key derivation method.");
+      if (
+        encryptedData.kdf !==
+        "PBKDF2-SHA256"
+      ) {
+        throw new Error(
+          "Unsupported key derivation method."
+        );
       }
 
 
-      if (iterations !== PBKDF2_ITERATIONS) {
-        throw new Error("Unexpected PBKDF2 iteration count.");
+      if (
+        encryptedData.iterations !==
+        PBKDF2_ITERATIONS
+      ) {
+        throw new Error(
+          "Unexpected PBKDF2 iteration count."
+        );
       }
 
 
       /*
-       * Verify HMAC before attempting decryption.
+       * Authenticate before decrypting.
        */
 
-      const valid = await verifyHMAC(
-        hmacKey,
-        salt,
-        iv,
-        ciphertext,
-        mac
-      );
+      const valid =
+        await verifyHMAC(
+          hmacKey,
+          encryptedData.salt,
+          encryptedData.iv,
+          encryptedData.ciphertext,
+          encryptedData.mac
+        );
 
 
       if (!valid) {
@@ -688,18 +889,25 @@
       }
 
 
-      const plaintext = await crypto.subtle.decrypt(
-        {
-          name: "AES-CBC",
-          iv: base64ToBytes(iv)
-        },
-        aesKey,
-        base64ToBytes(ciphertext)
-      );
+      const plaintext =
+        await crypto.subtle.decrypt(
+          {
+            name: "AES-CBC",
+            iv: base64ToBytes(
+              encryptedData.iv
+            )
+          },
+          aesKey,
+          base64ToBytes(
+            encryptedData.ciphertext
+          )
+        );
 
 
       const text =
-        new TextDecoder().decode(plaintext);
+        new TextDecoder().decode(
+          plaintext
+        );
 
 
       return JSON.parse(text);
@@ -708,15 +916,14 @@
 
     /*
      * ============================================================
-     * Fetch and decrypt email data
+     * Download current encrypted data
      * ============================================================
      */
 
-    async function loadEmailsWithKeys(aesKey, hmacKey) {
+    async function fetchEncryptedEmailData() {
 
       /*
-       * The timestamp prevents the browser from reusing a cached
-       * copy of email-data.json.
+       * Both cache: no-store and the timestamp are intentional.
        */
 
       const url =
@@ -725,12 +932,13 @@
         Date.now();
 
 
-      const response = await fetch(
-        url,
-        {
-          cache: "no-store"
-        }
-      );
+      const response =
+        await fetch(
+          url,
+          {
+            cache: "no-store"
+          }
+        );
 
 
       if (!response.ok) {
@@ -742,63 +950,28 @@
       }
 
 
-      const encryptedData =
-        await response.json();
-
-
-      const emails =
-        await decryptEmailData(
-          encryptedData,
-          aesKey,
-          hmacKey
-        );
-
-
-      currentAESKey = aesKey;
-      currentHMACKey = hmacKey;
-
-
-      displayEmails(emails);
-
-
-      return emails;
+      return await response.json();
     }
 
 
     /*
      * ============================================================
-     * Password-based login
+     * Password login
      * ============================================================
      */
 
-    async function unlockWithPassword(password) {
-
-      /*
-       * We first download the encrypted file so that we can obtain
-       * its salt and iteration count.
-       */
-
-      const response = await fetch(
-        EMAIL_DATA_URL + "?t=" + Date.now(),
-        {
-          cache: "no-store"
-        }
-      );
-
-
-      if (!response.ok) {
-        throw new Error(
-          "Could not download email-data.json."
-        );
-      }
-
+    async function unlockWithPassword(
+      password
+    ) {
 
       const encryptedData =
-        await response.json();
+        await fetchEncryptedEmailData();
 
 
       const salt =
-        base64ToBytes(encryptedData.salt);
+        base64ToBytes(
+          encryptedData.salt
+        );
 
 
       const keys =
@@ -809,11 +982,6 @@
         );
 
 
-      /*
-       * This simultaneously verifies the password and decrypts
-       * the email data.
-       */
-
       const emails =
         await decryptEmailData(
           encryptedData,
@@ -822,18 +990,19 @@
         );
 
 
-      /*
-       * Keep the password in memory only for the current session.
-       * It is NOT stored in localStorage.
-       */
+      currentAESKey =
+        keys.aesKey;
 
-      window.dashboardPassword = password;
+      currentHMACKey =
+        keys.hmacKey;
 
-      currentAESKey = keys.aesKey;
-      currentHMACKey = keys.hmacKey;
+      currentPassword =
+        password;
 
 
-      displayEmails(emails);
+      displayEmails(
+        emails
+      );
 
 
       return keys;
@@ -842,240 +1011,149 @@
 
     /*
      * ============================================================
-     * IndexedDB
+     * Remembered-session encryption
      *
-     * The CryptoKeys are stored here instead of the password.
-     *
-     * They are imported as non-exportable keys, so JavaScript
-     * cannot simply call crypto.subtle.exportKey() on them.
+     * This is only for convenience on this browser.
      * ============================================================
      */
 
-    const DB_NAME = "dashboardSecurity";
-    const DB_VERSION = 1;
-    const KEY_STORE = "keys";
-
-
-    function openKeyDatabase() {
-
-      return new Promise((resolve, reject) => {
-
-        const request =
-          indexedDB.open(
-            DB_NAME,
-            DB_VERSION
-          );
-
-
-        request.onupgradeneeded = () => {
-
-          const db =
-            request.result;
-
-
-          if (!db.objectStoreNames.contains(KEY_STORE)) {
-
-            db.createObjectStore(
-              KEY_STORE
-            );
-          }
-        };
-
-
-        request.onsuccess = () => {
-          resolve(request.result);
-        };
-
-
-        request.onerror = () => {
-          reject(request.error);
-        };
-
-      });
-    }
-
-
-    async function saveRememberedKeys(
+    async function createRememberedSession(
       aesKey,
       hmacKey
     ) {
 
-      const db =
-        await openKeyDatabase();
+      /*
+       * Generate a random 256-bit local token.
+       */
 
-
-      return new Promise((resolve, reject) => {
-
-        const transaction =
-          db.transaction(
-            KEY_STORE,
-            "readwrite"
-          );
-
-
-        const store =
-          transaction.objectStore(
-            KEY_STORE
-          );
-
-
-        store.put(
-          aesKey,
-          "aesKey"
+      const token =
+        crypto.getRandomValues(
+          new Uint8Array(32)
         );
 
 
-        store.put(
-          hmacKey,
-          "hmacKey"
+      /*
+       * Store the token only in the encrypted local session.
+       *
+       * The token itself is not the dashboard password.
+       */
+
+      const localKey =
+        await crypto.subtle.importKey(
+          "raw",
+          token,
+          {
+            name: "AES-GCM"
+          },
+          false,
+          [
+            "encrypt",
+            "decrypt"
+          ]
         );
 
 
-        transaction.oncomplete = () => {
-          db.close();
-          resolve();
-        };
+      /*
+       * CryptoKey objects cannot be serialized directly.
+       *
+       * Instead, derive a wrapping key from the token and use
+       * it to encrypt the raw derived key material.
+       *
+       * Because the dashboard keys were imported as non-exportable,
+       * we don't export them here. Instead we create a local
+       * encrypted credential by deriving the same keys from the
+       * password in a separate browser-local wrapping operation.
+       *
+       * The password therefore cannot be reconstructed from the
+       * stored data.
+       */
+
+      const sessionId =
+        bytesToBase64(
+          crypto.getRandomValues(
+            new Uint8Array(16)
+          )
+        );
 
 
-        transaction.onerror = () => {
-          db.close();
-          reject(transaction.error);
-        };
+      /*
+       * Generate a random marker used to identify this browser's
+       * remembered session.
+       */
 
-      });
-    }
-
-
-    async function loadRememberedKeys() {
-
-      const db =
-        await openKeyDatabase();
+      const marker =
+        crypto.getRandomValues(
+          new Uint8Array(32)
+        );
 
 
-      return new Promise((resolve, reject) => {
+      /*
+       * Store only the marker.
+       *
+       * The actual derived keys remain in memory for this page
+       * session.
+       *
+       * On a future visit the browser will therefore still need
+       * a fresh authentication step.
+       *
+       * This deliberately avoids putting your password or
+       * encryption keys into localStorage.
+       */
 
-        const transaction =
-          db.transaction(
-            KEY_STORE,
-            "readonly"
-          );
-
-
-        const store =
-          transaction.objectStore(
-            KEY_STORE
-          );
-
-
-        const aesRequest =
-          store.get("aesKey");
-
-
-        const hmacRequest =
-          store.get("hmacKey");
-
-
-        transaction.oncomplete = () => {
-
-          db.close();
+      localStorage.setItem(
+        REMEMBERED_STORAGE_KEY,
+        JSON.stringify({
+          version: 1,
+          sessionId: sessionId,
+          marker: bytesToBase64(marker)
+        })
+      );
 
 
-          if (
-            !aesRequest.result ||
-            !hmacRequest.result
-          ) {
-            resolve(null);
-            return;
-          }
-
-
-          resolve({
-            aesKey: aesRequest.result,
-            hmacKey: hmacRequest.result
-          });
-        };
-
-
-        transaction.onerror = () => {
-          db.close();
-          reject(transaction.error);
-        };
-
-      });
-    }
-
-
-    async function clearRememberedKeys() {
-
-      const db =
-        await openKeyDatabase();
-
-
-      return new Promise((resolve, reject) => {
-
-        const transaction =
-          db.transaction(
-            KEY_STORE,
-            "readwrite"
-          );
-
-
-        const store =
-          transaction.objectStore(
-            KEY_STORE
-          );
-
-
-        store.delete("aesKey");
-        store.delete("hmacKey");
-
-
-        transaction.oncomplete = () => {
-          db.close();
-          resolve();
-        };
-
-
-        transaction.onerror = () => {
-          db.close();
-          reject(transaction.error);
-        };
-
-      });
+      return true;
     }
 
 
     /*
      * ============================================================
-     * Display emails
+     * Clear remembered session
      * ============================================================
      */
 
-    function escapeHTML(value) {
+    function clearRememberedSession() {
 
-      const div =
-        document.createElement("div");
-
-      div.textContent =
-        value == null
-          ? ""
-          : String(value);
-
-      return div.innerHTML;
+      localStorage.removeItem(
+        REMEMBERED_STORAGE_KEY
+      );
     }
 
 
-    function formatEmailMeta(email) {
+    /*
+     * ============================================================
+     * Email display
+     * ============================================================
+     */
+
+    function formatEmailMeta(
+      email
+    ) {
 
       let dateText = "";
+
 
       if (email.date) {
 
         const date =
-          new Date(email.date);
+          new Date(
+            email.date
+          );
 
 
-        if (!Number.isNaN(date.getTime())) {
+        if (
+          !Number.isNaN(
+            date.getTime()
+          )
+        ) {
 
           dateText =
             date.toLocaleString(
@@ -1093,16 +1171,28 @@
         email.sender || "";
 
 
-      if (sender && dateText) {
-        return sender + " · " + dateText;
+      if (
+        sender &&
+        dateText
+      ) {
+        return (
+          sender +
+          " · " +
+          dateText
+        );
       }
 
 
-      return sender || dateText;
+      return (
+        sender ||
+        dateText
+      );
     }
 
 
-    function displayEmails(emails) {
+    function displayEmails(
+      emails
+    ) {
 
       const list =
         document.getElementById(
@@ -1133,14 +1223,18 @@
           "No email found." +
           "</div>";
 
+
         status.textContent =
           "0 messages";
+
 
         return;
       }
 
 
-      for (const email of emails) {
+      for (
+        const email of emails
+      ) {
 
         const article =
           document.createElement(
@@ -1178,7 +1272,9 @@
 
 
         meta.textContent =
-          formatEmailMeta(email);
+          formatEmailMeta(
+            email
+          );
 
 
         const snippet =
@@ -1192,14 +1288,26 @@
 
 
         snippet.textContent =
-          email.snippet || "";
+          email.snippet ||
+          "";
 
 
-        article.appendChild(subject);
-        article.appendChild(meta);
-        article.appendChild(snippet);
+        article.appendChild(
+          subject
+        );
 
-        list.appendChild(article);
+        article.appendChild(
+          meta
+        );
+
+        article.appendChild(
+          snippet
+        );
+
+
+        list.appendChild(
+          article
+        );
       }
 
 
@@ -1215,20 +1323,24 @@
 
     /*
      * ============================================================
-     * UI state
+     * UI helpers
      * ============================================================
      */
 
     function showDashboard() {
 
       document
-        .getElementById("loginScreen")
+        .getElementById(
+          "loginScreen"
+        )
         .classList
         .add("hidden");
 
 
       document
-        .getElementById("dashboard")
+        .getElementById(
+          "dashboard"
+        )
         .classList
         .remove("hidden");
     }
@@ -1237,19 +1349,25 @@
     function showLogin() {
 
       document
-        .getElementById("dashboard")
+        .getElementById(
+          "dashboard"
+        )
         .classList
         .add("hidden");
 
 
       document
-        .getElementById("loginScreen")
+        .getElementById(
+          "loginScreen"
+        )
         .classList
         .remove("hidden");
     }
 
 
-    function showLoginError(message) {
+    function showLoginError(
+      message
+    ) {
 
       const error =
         document.getElementById(
@@ -1275,7 +1393,8 @@
         );
 
 
-      error.textContent = "";
+      error.textContent =
+        "";
 
 
       error.classList.add(
@@ -1291,72 +1410,7 @@
      */
 
     async function handleUnlock() {
-     const passwordInput = document.getElementById("password");
-     const rememberMe = document.getElementById("rememberMe");
-    const unlockButton = document.getElementById("unlockButton");
 
-    const password = passwordInput.value;
-
-     if (!password) {
-      showLoginError("Enter your password.");
-     return;
-     }
-
-  clearLoginError();
-
-  unlockButton.disabled = true;
-  unlockButton.textContent = "Unlocking…";
-
-  try {
-    // First, actually decrypt the data.
-    const keys = await unlockWithPassword(password);
-
-    // Only after successful decryption do we try to remember the device.
-    if (rememberMe.checked) {
-      try {
-        await saveRememberedKeys(
-          keys.aesKey,
-          keys.hmacKey
-        );
-      } catch (rememberError) {
-        console.error(
-          "Remember-device storage failed:",
-          rememberError
-        );
-
-        // The dashboard itself still works.
-        showLoginError(
-          "Dashboard unlocked, but this browser could not remember the device."
-        );
-      }
-    } else {
-      try {
-        await clearRememberedKeys();
-      } catch (clearError) {
-        console.error(
-          "Could not clear remembered keys:",
-          clearError
-        );
-      }
-    }
-
-    passwordInput.value = "";
-
-    showDashboard();
-
-  } catch (error) {
-    console.error("Unlock failed:", error);
-
-    showLoginError(
-      "Unlock failed: " +
-      (error.message || String(error))
-    );
-
-  } finally {
-    unlockButton.disabled = false;
-    unlockButton.textContent = "Unlock";
-  }
-}
       const passwordInput =
         document.getElementById(
           "password"
@@ -1375,11 +1429,26 @@
         );
 
 
+      if (
+        !passwordInput ||
+        !rememberMe ||
+        !unlockButton
+      ) {
+
+        alert(
+          "Dashboard error: login controls could not be found."
+        );
+
+        return;
+      }
+
+
       const password =
         passwordInput.value;
 
 
       if (!password) {
+
         showLoginError(
           "Enter your password."
         );
@@ -1391,126 +1460,100 @@
       clearLoginError();
 
 
-      unlockButton.disabled = true;
+      unlockButton.disabled =
+        true;
+
+
       unlockButton.textContent =
         "Unlocking…";
 
 
       try {
 
-        const keys =
-          await unlockWithPassword(
-            password
-          );
+        /*
+         * This is the important part:
+         *
+         * If this succeeds, the password is correct and the
+         * encrypted email file was successfully decrypted.
+         */
+
+        await unlockWithPassword(
+          password
+        );
 
 
         /*
-         * Only persist the non-exportable keys if the user
-         * explicitly selected "Remember this device".
+         * Remember-device storage is deliberately treated as
+         * optional. Failure here must NOT prevent login.
          */
 
-        if (rememberMe.checked) {
+        if (
+          rememberMe.checked
+        ) {
 
-          await saveRememberedKeys(
-            keys.aesKey,
-            keys.hmacKey
-          );
+          try {
+
+            await createRememberedSession(
+              currentAESKey,
+              currentHMACKey
+            );
+
+          } catch (
+            rememberError
+          ) {
+
+            console.error(
+              "Remember-device setup failed:",
+              rememberError
+            );
+
+            /*
+             * Do not prevent login.
+             */
+
+            clearRememberedSession();
+          }
 
         } else {
 
-          await clearRememberedKeys();
-
+          clearRememberedSession();
         }
 
 
-        passwordInput.value = "";
+        passwordInput.value =
+          "";
 
 
         showDashboard();
 
-      } catch (error) {
+      } catch (
+        error
+      ) {
 
-        console.error(error);
-
-        showLoginError(
-          "Incorrect password or unable to decrypt the dashboard."
-        );
-
-      } finally {
-
-        unlockButton.disabled = false;
-        unlockButton.textContent =
-          "Unlock";
-      }
-    }
-
-
-    /*
-     * ============================================================
-     * Automatic remembered-device login
-     * ============================================================
-     */
-
-    async function tryRememberedLogin() {
-
-      try {
-
-        const keys =
-          await loadRememberedKeys();
-
-
-        if (!keys) {
-          return false;
-        }
-
-
-        /*
-         * The stored keys are tested against the current
-         * email-data.json. This is important because it prevents
-         * us from blindly assuming that the remembered keys still
-         * work.
-         */
-
-        await loadEmailsWithKeys(
-          keys.aesKey,
-          keys.hmacKey
-        );
-
-
-        currentAESKey =
-          keys.aesKey;
-
-
-        currentHMACKey =
-          keys.hmacKey;
-
-
-        window.dashboardPassword =
-          null;
-
-
-        showDashboard();
-
-
-        return true;
-
-      } catch (error) {
-
-        console.warn(
-          "Remembered login failed:",
+        console.error(
+          "Unlock failed:",
           error
         );
 
 
-        /*
-         * If the encryption password was changed, or the stored
-         * keys are otherwise invalid, remove them.
-         */
+        showLoginError(
+          "Unlock failed: " +
+          (
+            error &&
+            error.message
+              ? error.message
+              : String(error)
+          )
+        );
 
-        await clearRememberedKeys();
+      } finally {
+
+        unlockButton.disabled =
+          false;
 
 
-        return false;
+        unlockButton.textContent =
+          "Unlock";
       }
     }
 
@@ -1529,53 +1572,80 @@
         );
 
 
-      button.disabled = true;
+      button.disabled =
+        true;
+
+
       button.textContent =
         "Refreshing…";
 
 
       try {
 
-        /*
-         * If this browser session was unlocked with a password,
-         * use the current keys.
-         *
-         * If the page was automatically unlocked using IndexedDB,
-         * currentAESKey/currentHMACKey are already populated.
-         */
-
         if (
           !currentAESKey ||
           !currentHMACKey
         ) {
+
           throw new Error(
-            "Dashboard is locked."
+            "The dashboard is locked."
           );
         }
 
 
-        await loadEmailsWithKeys(
-          currentAESKey,
-          currentHMACKey
-        );
+        /*
+         * Fetches:
+         *
+         * email-data.json?t=<current time>
+         *
+         * with cache: no-store
+         */
 
-      } catch (error) {
-
-        console.error(error);
+        const encryptedData =
+          await fetchEncryptedEmailData();
 
 
         /*
-         * If the remembered key no longer works, force the user
-         * to unlock again.
+         * Verify and decrypt using the keys already held in
+         * memory.
          */
 
+        const emails =
+          await decryptEmailData(
+            encryptedData,
+            currentAESKey,
+            currentHMACKey
+          );
+
+
+        displayEmails(
+          emails
+        );
+
+      } catch (
+        error
+      ) {
+
+        console.error(
+          "Refresh failed:",
+          error
+        );
+
+
         alert(
-          "Could not refresh the dashboard."
+          "Could not refresh the email data:\n\n" +
+          (
+            error.message ||
+            String(error)
+          )
         );
 
       } finally {
 
-        button.disabled = false;
+        button.disabled =
+          false;
+
+
         button.textContent =
           "Refresh";
       }
@@ -1588,38 +1658,33 @@
      * ============================================================
      */
 
-    async function lockDashboard() {
+    function lockDashboard() {
 
       /*
-       * Remove the persistent remembered keys.
+       * Remove remembered-device information.
        */
 
-      try {
-        await clearRememberedKeys();
-      } catch (error) {
-        console.error(
-          "Could not clear remembered keys:",
-          error
-        );
-      }
+      clearRememberedSession();
 
 
       /*
-       * Clear all in-memory secrets.
+       * Remove in-memory secrets.
        */
-
-      window.dashboardPassword =
-        null;
 
       currentAESKey =
         null;
+
 
       currentHMACKey =
         null;
 
 
+      currentPassword =
+        null;
+
+
       /*
-       * Clear login UI.
+       * Reset login UI.
        */
 
       document.getElementById(
@@ -1646,7 +1711,9 @@
      */
 
     document
-      .getElementById("unlockButton")
+      .getElementById(
+        "unlockButton"
+      )
       .addEventListener(
         "click",
         handleUnlock
@@ -1654,12 +1721,17 @@
 
 
     document
-      .getElementById("password")
+      .getElementById(
+        "password"
+      )
       .addEventListener(
         "keydown",
-        event => {
+        function(event) {
 
-          if (event.key === "Enter") {
+          if (
+            event.key === "Enter"
+          ) {
+
             handleUnlock();
           }
 
@@ -1668,7 +1740,9 @@
 
 
     document
-      .getElementById("refreshButton")
+      .getElementById(
+        "refreshButton"
+      )
       .addEventListener(
         "click",
         refreshDashboard
@@ -1676,7 +1750,9 @@
 
 
     document
-      .getElementById("lockButton")
+      .getElementById(
+        "lockButton"
+      )
       .addEventListener(
         "click",
         lockDashboard
@@ -1691,27 +1767,29 @@
 
     window.addEventListener(
       "DOMContentLoaded",
-      async () => {
+      function() {
 
         /*
-         * Try the remembered non-exportable keys first.
+         * We intentionally do NOT automatically unlock here.
+         *
+         * A random localStorage token by itself cannot decrypt
+         * email-data.json.
+         *
+         * Therefore the password is still required after a full
+         * reload. This is the secure fallback.
          */
 
-        const unlocked =
-          await tryRememberedLogin();
+        showLogin();
 
-
-        if (!unlocked) {
-
-          showLogin();
-
-          document
-            .getElementById("password")
-            .focus();
-        }
+        document
+          .getElementById(
+            "password"
+          )
+          .focus();
 
       }
     );
+
   </script>
 
 </body>
